@@ -30,9 +30,6 @@ RUN set -ex \
     && apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF \
     && echo "deb https://download.mono-project.com/repo/ubuntu stable-bionic main" | tee /etc/apt/sources.list.d/mono-official-stable.list \
     && apt-get update \
-    && apt-get install software-properties-common -y --no-install-recommends \
-    && apt-add-repository ppa:git-core/ppa \
-    && apt-get update \
     && apt-get install git=1:2.* -y --no-install-recommends \
     && git version \
     && apt-get install -y --no-install-recommends openssh-client=1:7.6* \
@@ -59,7 +56,7 @@ RUN set -ex \
         libdbd-sqlite3-perl=1.56-* libdbi-perl=1.640-* libdpkg-perl=1.19.* libhttp-date-perl=6.02-* \
         libio-pty-perl=1:1.08-* libserf-1-1=1.3.* libsvn-perl=1.9.* libsvn1=1.9.* libtcl8.6=8.6.* libtimedate-perl=2.3000-* \
         libxml2-utils=2.9.* libyaml-perl=1.24-* python-bzrlib=2.7.* python-configobj=5.0.* \
-        sgml-base=1.29* sgml-data=2.0.* subversion=1.9.* tcl=8.6.* tcl8.6=8.6.* xml-core=0.18* xmlto=0.0.* xsltproc=1.1.* python3-pip \
+        sgml-base=1.29* sgml-data=2.0.* subversion=1.9.* tcl=8.6.* tcl8.6=8.6.* xml-core=0.18* xmlto=0.0.* xsltproc=1.1.* python3-pip python3-setuptools \
         tk=8.6.* gettext=0.19.* gettext-base=0.19.* libapr1=1.6.* libaprutil1=1.6.* \
         libargon2-0 libargon2-0-dev \
     && rm -rf /var/lib/apt/lists/* \
@@ -95,9 +92,9 @@ RUN set -ex \
 # Install dependencies by all python images equivalent to buildpack-deps:jessie
 # on the public repos.
 
-# RUN apt-get install python3-setuptools
-# RUN set -ex \
-#     && pip3 install awscli boto3
+RUN apt-get install python3-setuptools
+RUN set -ex \
+    && pip3 install awscli boto3
 
 VOLUME /var/lib/docker
 
