@@ -104,7 +104,7 @@ COPY ssh_config /root/.ssh/config
 COPY dockerd-entrypoint.sh /usr/local/bin/
 
 
-ENV GPG_KEYS %%GPG_KEYS%%
+ENV GPG_KEYS %%PHP_GPG_KEYS%%
 ENV SRC_DIR="/usr/src" \
     PHP_VERSION=%%PHP_VERSION%% \
     PHP_DOWNLOAD_SHA="%%PHP_SHA256%%" \
@@ -216,7 +216,7 @@ ENV NODE_VERSION="%%NODE_VERSION%%"
 # gpg keys listed at https://github.com/nodejs/node#release-team
 RUN set -ex \
     && for key in \
-    %%NODE_GPG_KEYS%% \
+      %%NODE_GPG_KEYS%% \
     ; do \
       gpg --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys "$key" || \
       gpg --keyserver hkp://ipv4.pool.sks-keyservers.net --recv-keys "$key" || \
