@@ -252,7 +252,7 @@ ENV YARN_VERSION 1.13.0
 
 RUN set -ex \
     && for key in \
-        %%YARN_GPG_KEY%% \
+        6A010C5166006599AA17F08146C2130DFD2497F5 \
     ; do \
         gpg --batch --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys "$key" || \
         gpg --batch --keyserver hkp://ipv4.pool.sks-keyservers.net --recv-keys "$key" || \
