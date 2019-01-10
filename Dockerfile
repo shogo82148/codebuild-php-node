@@ -25,7 +25,7 @@ ENV DOCKER_BUCKET="download.docker.com" \
 RUN set -ex \
     && echo 'Acquire::CompressionTypes::Order:: "gz";' > /etc/apt/apt.conf.d/99use-gzip-compression \
     && apt-get update \
-    && apt install -y apt-transport-https gnupg2 \
+    && apt install -y apt-transport-https ca-certificates gnupg2 \
     && apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF \
     && echo "deb https://download.mono-project.com/repo/ubuntu stable-bionic main" | tee /etc/apt/sources.list.d/mono-official-stable.list \
     && apt-get update \
@@ -41,7 +41,7 @@ RUN set -ex \
     && ssh-keyscan -t rsa,dsa -H bitbucket.org >> ~/.ssh/known_hosts \
     && chmod 600 ~/.ssh/known_hosts \
     && apt-get install -y --no-install-recommends \
-       wget=1.15-* python3=3.4.* python3.4-dev=3.4.* fakeroot=1.20-* ca-certificates jq \
+       wget=1.15-* python3=3.4.* python3.4-dev=3.4.* fakeroot=1.20-* jq \
        tar=1.27.* gzip=1.6-* zip=3.0-* autoconf=2.69-* automake=1:1.14.* \
        bzip2=1.0.* file=1:5.14-* g++=4:4.8.* gcc=4:4.8.* imagemagick=8:6.7.* \
        libbz2-dev=1.0.* libc6-dev=2.19-* libcurl4-openssl-dev=7.35.* libdb-dev=1:5.3.* \
