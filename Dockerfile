@@ -131,14 +131,12 @@ COPY dockerd-entrypoint.sh /usr/local/bin/
      done; \
      gpg --batch --verify php.tar.xz.asc php.tar.xz; \
      rm -rf "$GNUPGHOME"; \
- 
      set -eux; \
      savedAptMark="$(apt-mark showmanual)"; \
      apt-get update; \
      apt-get install -y --no-install-recommends libedit-dev=3.1-* dpkg-dev=1.17.*; \
      rm -rf /var/lib/apt/lists/*; \
      apt-get clean; \
- 
      export \
          CFLAGS="$PHP_CFLAGS" \
          CPPFLAGS="$PHP_CPPFLAGS" \
@@ -149,7 +147,6 @@ COPY dockerd-entrypoint.sh /usr/local/bin/
      cd $SRC_DIR/php; \
      gnuArch="$(dpkg-architecture -qDEB_BUILD_GNU_TYPE)"; \
      debMultiarch="$(dpkg-architecture -qDEB_BUILD_MULTIARCH)"; \
- 
      # https://bugs.php.net/bug.php?id=74125
      if [ ! -d /usr/include/curl ]; then \
          ln -sT "/usr/include/$debMultiarch/curl" /usr/local/include/curl; \
@@ -176,7 +173,6 @@ COPY dockerd-entrypoint.sh /usr/local/bin/
          --with-openssl \
          --with-zlib \
      # bundled pcre does not support JIT on s390x
- 
      # https://manpages.debian.org/stretch/libpcre3-dev/pcrejit.3.en.html#AVAILABILITY_OF_JIT_SUPPORT
      $(test "$gnuArch" = 's390x-linux-gnu' && echo '--without-pcre-jit') \
          --with-libdir="lib/$debMultiarch" \
@@ -189,7 +185,6 @@ COPY dockerd-entrypoint.sh /usr/local/bin/
      make clean; \
      cd /; \
      rm -rf $PHP_SRC_DIR; \
- 
      # reset apt-mark's "manual" list so that "purge --auto-remove" will remove all build dependencies
      apt-mark auto '.*' > /dev/null; \
      [ -z "$savedAptMark" ] || apt-mark manual $savedAptMark; \
@@ -205,7 +200,6 @@ COPY dockerd-entrypoint.sh /usr/local/bin/
      php --version; \
      pecl update-channels; \
      rm -rf /tmp/pear ~/.pearrc; \
- 
      # Increase the memory size, default is 128M
      mkdir "$PHP_INI_DIR"; \
      mkdir "$PHP_INI_DIR/conf.d"; \
