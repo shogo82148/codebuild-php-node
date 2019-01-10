@@ -11,7 +11,7 @@
 # See the License for the specific language governing permissions and limitations under the License.
 #
 
-FROM ubuntu:14.04.5
+FROM ubuntu:18.04
 
 ENV DOCKER_BUCKET="download.docker.com" \
     DOCKER_VERSION="18.09.0" \
