@@ -11,7 +11,7 @@
 # See the License for the specific language governing permissions and limitations under the License.
 #
 
-FROM ubuntu:14.04.5
+FROM ubuntu:18.04
 
 ENV DOCKER_BUCKET="download.docker.com" \
     DOCKER_VERSION="18.09.0" \
@@ -29,7 +29,7 @@ RUN set -ex \
     && apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF \
     && echo "deb https://download.mono-project.com/repo/ubuntu stable-bionic main" | tee /etc/apt/sources.list.d/mono-official-stable.list \
     && apt-get update \
-    && apt-get install git=1:2.* -y --no-install-recommends \
+    && apt-get install git -y --no-install-recommends \
     && git version \
     && apt-get install -y --no-install-recommends openssh-client=1:7.6* \
     && mkdir ~/.ssh \
@@ -102,10 +102,10 @@ COPY ssh_config /root/.ssh/config
 COPY dockerd-entrypoint.sh /usr/local/bin/
 
 
-ENV GPG_KEYS 1729F83938DA44E27BA0F4D3DBDB397470D12172 B1B44D8F021E4E2D6021E995DC9FF8D3EE5AF27F
+ENV GPG_KEYS CBAF69F173A0FEA4B537F470D66C9593118BCCB6 F38252826ACD957EF380D39F2F7956BC5DA04B5D
 ENV SRC_DIR="/usr/src" \
-    PHP_VERSION=7.2.14 \
-    PHP_DOWNLOAD_SHA="ee3f1cc102b073578a3c53ba4420a76da3d9f0c981c02b1664ae741ca65af84f" \
+    PHP_VERSION=7.3.1 \
+    PHP_DOWNLOAD_SHA="cfe93e40be0350cd53c4a579f52fe5d8faf9c6db047f650a4566a2276bf33362" \
     PHPPATH="/php" \
     PHP_INI_DIR="/usr/local/etc/php" \
     PHP_CFLAGS="-fstack-protector -fpic -fpie -O2" \

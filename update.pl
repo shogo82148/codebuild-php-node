@@ -28,6 +28,9 @@ my $php_gpg_keys = {
 
 my ($php_version, $node_version) = @ARGV;
 
+die "php version is required" unless $php_version;
+die "node verison is reqiored" unless $node_version;
+
 my $php = do {
     my ($major, $minor) = split /[.]/, $php_version;
     my $json = decode_json(`curl -sSL "https://secure.php.net/releases/index.php?json&max=100&version=$major"`);
@@ -100,9 +103,16 @@ $doc =~ s/%%NODE_GPG_KEYS%%/@{[join " \\\n     ", @$node_gpg_keys]}/;
 $doc =~ s/%%NODE_VERSION%%/$yarn->{version}/;
 $doc =~ s/%%YARN_GPG_KEYS%%/@{[join " ", @$yarn_gpg_keys]}/;
 
-open $fh, '>', 'Dockerfile' or die $!;
+mkdir "php$php_version" unless -d "php$php_version";
+mkdir "php$php_version/node$node_version" unless -d "php$php_version/node$node_version";
+
+my $dir = "php$php_version/node$node_version";
+open $fh, '>', "$dir/Dockerfile" or die $!;
 print $fh $doc;
 close $fh;
+
+`cp ssh_config $dir`;
+`cp dockerd-entrypoint.sh $dir`;
 
 __END__
 
