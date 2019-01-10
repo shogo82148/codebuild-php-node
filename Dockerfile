@@ -95,8 +95,9 @@ RUN set -ex \
 # Install dependencies by all python images equivalent to buildpack-deps:jessie
 # on the public repos.
 
-RUN set -ex \
-    && pip3 install awscli boto3
+# RUN apt-get install python3-setuptools
+# RUN set -ex \
+#     && pip3 install awscli boto3
 
 VOLUME /var/lib/docker
 
@@ -136,7 +137,7 @@ RUN set -xe; \
     set -eux; \
     savedAptMark="$(apt-mark showmanual)"; \
     apt-get update; \
-    apt-get install -y --no-install-recommends libedit-dev=3.1-* dpkg-dev=1.17.*; \
+    apt-get install -y --no-install-recommends libedit-dev=3.1-* dpkg-dev=1.19.*; \
     rm -rf /var/lib/apt/lists/*; \
     apt-get clean; \
     export \
