@@ -20,6 +20,7 @@ ENV DOCKER_BUCKET="download.docker.com" \
     DIND_COMMIT="3b5fac462d21ca164b3778647420016315289034" \
     DOCKER_COMPOSE_VERSION="1.23.2" \
     GITVERSION_VERSION="3.6.5"
+ENV DEBIAN_FRONTEND=noninteractive
 
 # Install git, SSH, and other utilities
 RUN set -ex \
