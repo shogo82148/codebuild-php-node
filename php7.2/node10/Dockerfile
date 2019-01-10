@@ -248,7 +248,7 @@ RUN set -ex \
 
 RUN npm set unsafe-perm true
 
-ENV YARN_VERSION %%YARN_VERSION%%
+ENV YARN_VERSION 1.13.0
 
 RUN set -ex \
     && for key in \

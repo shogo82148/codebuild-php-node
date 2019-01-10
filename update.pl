@@ -100,7 +100,7 @@ $doc =~ s/%%PHP_SHA256%%/$php->{sha256}/;
 $doc =~ s/%%PHP_GPG_KEYS%%/$php->{gpg}/;
 $doc =~ s/%%NODE_VERSION%%/$node->{version}/;
 $doc =~ s/%%NODE_GPG_KEYS%%/@{[join " \\\n     ", @$node_gpg_keys]}/;
-$doc =~ s/%%NODE_VERSION%%/$yarn->{version}/;
+$doc =~ s/%%YARN_VERSION%%/$yarn->{version}/;
 $doc =~ s/%%YARN_GPG_KEYS%%/@{[join " ", @$yarn_gpg_keys]}/;
 
 mkdir "php$php_version" unless -d "php$php_version";
