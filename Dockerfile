@@ -11,7 +11,7 @@
 # See the License for the specific language governing permissions and limitations under the License.
 #
 
-FROM ubuntu:18.04
+FROM ubuntu:14.04.5
 
 ENV DOCKER_BUCKET="download.docker.com" \
     DOCKER_VERSION="18.09.0" \
@@ -20,7 +20,6 @@ ENV DOCKER_BUCKET="download.docker.com" \
     DIND_COMMIT="3b5fac462d21ca164b3778647420016315289034" \
     DOCKER_COMPOSE_VERSION="1.23.2" \
     GITVERSION_VERSION="3.6.5"
-ENV DEBIAN_FRONTEND=noninteractive
 
 # Install git, SSH, and other utilities
 RUN set -ex \
@@ -92,7 +91,6 @@ RUN set -ex \
 # Install dependencies by all python images equivalent to buildpack-deps:jessie
 # on the public repos.
 
-RUN apt-get install python3-setuptools
 RUN set -ex \
     && pip3 install awscli boto3
 
@@ -106,8 +104,8 @@ COPY dockerd-entrypoint.sh /usr/local/bin/
 
 ENV GPG_KEYS 1729F83938DA44E27BA0F4D3DBDB397470D12172 B1B44D8F021E4E2D6021E995DC9FF8D3EE5AF27F
 ENV SRC_DIR="/usr/src" \
-    PHP_VERSION=7.2.13 \
-    PHP_DOWNLOAD_SHA="14b0429abdb46b65c843e5882c9a8c46b31dfbf279c747293b8ab950c2644a4b" \
+    PHP_VERSION=7.2.14 \
+    PHP_DOWNLOAD_SHA="ee3f1cc102b073578a3c53ba4420a76da3d9f0c981c02b1664ae741ca65af84f" \
     PHPPATH="/php" \
     PHP_INI_DIR="/usr/local/etc/php" \
     PHP_CFLAGS="-fstack-protector -fpic -fpie -O2" \
@@ -245,5 +243,24 @@ RUN set -ex \
 		&& rm -fr /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 RUN npm set unsafe-perm true
+
+ENV YARN_VERSION %%YARN_VERSION%%
+
+RUN set -ex \
+    && for key in \
+        %%YARN_GPG_KEY%% \
+    ; do \
+        gpg --batch --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys "$key" || \
+        gpg --batch --keyserver hkp://ipv4.pool.sks-keyservers.net --recv-keys "$key" || \
+        gpg --batch --keyserver hkp://pgp.mit.edu:80 --recv-keys "$key" ; \
+    done \
+    && curl -fsSLO --compressed "https://yarnpkg.com/downloads/$YARN_VERSION/yarn-v$YARN_VERSION.tar.gz" \
+    && curl -fsSLO --compressed "https://yarnpkg.com/downloads/$YARN_VERSION/yarn-v$YARN_VERSION.tar.gz.asc" \
+    && gpg --batch --verify yarn-v$YARN_VERSION.tar.gz.asc yarn-v$YARN_VERSION.tar.gz \
+    && mkdir -p /opt \
+    && tar -xzf yarn-v$YARN_VERSION.tar.gz -C /opt/ \
+    && ln -s /opt/yarn-v$YARN_VERSION/bin/yarn /usr/local/bin/yarn \
+    && ln -s /opt/yarn-v$YARN_VERSION/bin/yarnpkg /usr/local/bin/yarnpkg \
+    && rm yarn-v$YARN_VERSION.tar.gz.asc yarn-v$YARN_VERSION.tar.gz
 
 WORKDIR $PHPPATH

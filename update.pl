@@ -80,6 +80,14 @@ my $node = do {
     };
 };
 
+my $yarn_gpg_keys = ["6A010C5166006599AA17F08146C2130DFD2497F5"];
+
+my $yarn = do {
+    +{
+        version => `curl -sSL --compressed https://yarnpkg.com/latest-version`,
+    };
+};
+
 open my $fh, '<', 'Dockerfile.template' or die $!;
 my $doc = do { local $/ = undef; <$fh>; };
 close $fh;
@@ -89,6 +97,8 @@ $doc =~ s/%%PHP_SHA256%%/$php->{sha256}/;
 $doc =~ s/%%PHP_GPG_KEYS%%/$php->{gpg}/;
 $doc =~ s/%%NODE_VERSION%%/$node->{version}/;
 $doc =~ s/%%NODE_GPG_KEYS%%/@{[join " \\\n     ", @$node_gpg_keys]}/;
+$doc =~ s/%%NODE_VERSION%%/$yarn->{version}/;
+$doc =~ s/%%YARN_GPG_KEYS%%/@{[join " ", @$yarn_gpg_keys]}/;
 
 open $fh, '>', 'Dockerfile' or die $!;
 print $fh $doc;
