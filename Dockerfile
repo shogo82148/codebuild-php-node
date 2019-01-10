@@ -34,16 +34,16 @@ RUN set -ex \
     && apt-get update \
     && apt-get install git=1:2.* -y --no-install-recommends \
     && git version \
-    && apt-get install -y --no-install-recommends openssh-client=1:6.6* \
+    && apt-get install -y --no-install-recommends openssh-client=1:7.6* \
     && mkdir ~/.ssh \
     && touch ~/.ssh/known_hosts \
     && ssh-keyscan -t rsa,dsa -H github.com >> ~/.ssh/known_hosts \
     && ssh-keyscan -t rsa,dsa -H bitbucket.org >> ~/.ssh/known_hosts \
     && chmod 600 ~/.ssh/known_hosts \
     && apt-get install -y --no-install-recommends \
-       wget=1.15-* python3=3.4.* python3.4-dev=3.4.* fakeroot=1.20-* jq \
-       tar=1.27.* gzip=1.6-* zip=3.0-* autoconf=2.69-* automake=1:1.14.* \
-       bzip2=1.0.* file=1:5.14-* g++=4:4.8.* gcc=4:4.8.* imagemagick=8:6.7.* \
+       wget=1.19-* python3=3.6.* python3.6-dev=3.6.* fakeroot=1.22-* jq \
+       tar=1.29* gzip=1.6-* zip=3.0-* autoconf=2.69-* automake=1:1.15.* \
+       bzip2=1.0.* file=1:5.32-* g++=4:7.3.* gcc=4:7.3.* imagemagick=8:6.9.* \
        libbz2-dev=1.0.* libc6-dev=2.19-* libcurl4-openssl-dev=7.35.* libdb-dev=1:5.3.* \
        libevent-dev=2.0.* libffi-dev=3.1~* libgeoip-dev=1.6.* libglib2.0-dev=2.40.* \
        libjpeg-dev=8c-* libkrb5-dev=1.12+* liblzma-dev=5.1.* \
