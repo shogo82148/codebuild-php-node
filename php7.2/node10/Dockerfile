@@ -106,8 +106,8 @@ COPY dockerd-entrypoint.sh /usr/local/bin/
 
 ENV GPG_KEYS 1729F83938DA44E27BA0F4D3DBDB397470D12172 B1B44D8F021E4E2D6021E995DC9FF8D3EE5AF27F
 ENV SRC_DIR="/usr/src" \
-    PHP_VERSION=7.2.14 \
-    PHP_DOWNLOAD_SHA="ee3f1cc102b073578a3c53ba4420a76da3d9f0c981c02b1664ae741ca65af84f" \
+    PHP_VERSION=7.2.16 \
+    PHP_DOWNLOAD_SHA="7d91ed3c1447c6358a3d53f84599ef854aca4c3622de7435e2df115bf196e482" \
     PHPPATH="/php" \
     PHP_INI_DIR="/usr/local/etc/php" \
     PHP_CFLAGS="-fstack-protector -fpic -fpie -O2" \
@@ -214,7 +214,7 @@ ENV PATH="$PHPPATH/bin:/usr/local/php/bin:$PATH"
 # Install Composer globally
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer
 
-ENV NODE_VERSION="10.15.0"
+ENV NODE_VERSION="10.15.3"
 
 # gpg keys listed at https://github.com/nodejs/node#release-team
 RUN set -ex \
@@ -248,7 +248,7 @@ RUN set -ex \
 
 RUN npm set unsafe-perm true
 
-ENV YARN_VERSION 1.13.0
+ENV YARN_VERSION 1.15.2
 
 RUN set -ex \
     && for key in \
