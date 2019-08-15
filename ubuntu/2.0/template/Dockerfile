@@ -13,6 +13,8 @@ FROM ubuntu:18.04
 
 ENV PHP_VERSION="%%PHP_VERSION%%" \
  NODE_VERSION="%%NODE_VERSION%%" \
+ JQ_VERSION="1.6" \
+ JQ_SHA256="af986793a515d500ab2d35f8d2aecd656e764504b789b66d7e1a0b727a124c44" \
  DOCKER_VERSION="18.09.6" \
  DOCKER_COMPOSE_VERSION="1.24.0"
 
@@ -43,7 +45,7 @@ RUN set -ex \
     && ssh-keyscan -t rsa,dsa -H bitbucket.org >> ~/.ssh/known_hosts \
     && chmod 600 ~/.ssh/known_hosts \
     && apt-get install -y --no-install-recommends \
-       wget python3 python3-dev python3-pip python3-setuptools fakeroot ca-certificates jq \
+       wget python3 python3-dev python3-pip python3-setuptools fakeroot ca-certificates \
        netbase gnupg dirmngr bzr mercurial procps \
        tar gzip zip autoconf automake \
        bzip2 file g++ gcc imagemagick \
@@ -56,7 +58,7 @@ RUN set -ex \
        libxml2-dev libxslt1-dev libyaml-dev make \
        patch xz-utils zlib1g-dev unzip curl \
        e2fsprogs iptables xfsprogs \
-       mono-devel less groff liberror-perl \
+       less groff liberror-perl \
        asciidoc build-essential bzr cvs cvsps docbook-xml docbook-xsl dpkg-dev \
        libdbd-sqlite3-perl libdbi-perl libdpkg-perl libhttp-date-perl \
        libio-pty-perl libserf-1-1 libsvn-perl libsvn1 libtcl8.6 libtimedate-perl \
@@ -65,7 +67,10 @@ RUN set -ex \
        tk gettext gettext-base libapr1 libaprutil1 xvfb expect parallel \
        locales rsync \
     && rm -rf /var/lib/apt/lists/* \
-    && apt-get clean
+    && apt-get clean \
+    && wget https://github.com/stedolan/jq/releases/download/jq-${JQ_VERSION}/jq-linux64 -O /usr/local/bin/jq \
+    && echo "$JQ_SHA256 /usr/local/bin/jq" | sha256sum -c - \
+    && chmod +x /usr/local/bin/jq
 
 # Install Docker
 RUN set -ex \

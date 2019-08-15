@@ -14,6 +14,8 @@ FROM amazonlinux:2
 ENV PYTHON_VERSION="3.7.3" \
  PHP_VERSION="7.2.21" \
  NODE_VERSION="12.8.1" \
+ JQ_VERSION="1.6" \
+ JQ_SHA256="af986793a515d500ab2d35f8d2aecd656e764504b789b66d7e1a0b727a124c44" \
  DOCKER_VERSION="18.09.6" \
  DOCKER_COMPOSE_VERSION="1.24.0"
 
@@ -39,7 +41,7 @@ RUN set -ex \
     && yum install -y $EPEL_REPO $TRINITY_REPO \
     && amazon-linux-extras enable corretto8 \
     && yum groupinstall -y "Development tools" \
-    && yum install -y wget fakeroot jq \
+    && yum install -y wget fakeroot \
        dirmngr bzr mercurial procps-ng \
        ImageMagick \
        openssl-devel libdb-devel \
@@ -50,13 +52,16 @@ RUN set -ex \
        libsqlite3x-devel libwebp-devel \
        libxml2-devel libxslt-devel libyaml-devel \
        e2fsprogs iptables xfsprogs \
-       mono-devel groff \
+       groff \
        asciidoc cvs cvsps docbook-dtds docbook-style-xsl \
        perl-DBD-SQLite perl-DBI perl-HTTP-Date \
        perl-IO-Pty-Easy libserf subversion-perl tcl perl-TimeDate \
        perl-YAML-LibYAML bzrtools python-configobj \
        sgml-common xmlto libxslt \
-       tk xorg-x11-server-Xvfb expect parallel rsync
+       tk xorg-x11-server-Xvfb expect parallel rsync \
+    && wget https://github.com/stedolan/jq/releases/download/jq-${JQ_VERSION}/jq-linux64 -O /usr/local/bin/jq \
+    && echo "$JQ_SHA256 /usr/local/bin/jq" | sha256sum -c - \
+    && chmod +x /usr/local/bin/jq
 
 # Install Docker
 RUN set -ex \
