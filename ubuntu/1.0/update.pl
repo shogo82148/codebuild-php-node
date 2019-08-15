@@ -91,28 +91,34 @@ my $yarn = do {
     };
 };
 
-open my $fh, '<', 'Dockerfile.template' or die $!;
-my $doc = do { local $/ = undef; <$fh>; };
-close $fh;
+sub execute_template {
+    my ($name) = @_;
+    open my $fh, '<', "template/$name" or die $!;
+    my $doc = do { local $/ = undef; <$fh>; };
+    close $fh;
 
-$doc =~ s/%%PHP_VERSION%%/$php->{version}/;
-$doc =~ s/%%PHP_SHA256%%/$php->{sha256}/;
-$doc =~ s/%%PHP_GPG_KEYS%%/$php->{gpg}/;
-$doc =~ s/%%NODE_VERSION%%/$node->{version}/;
-$doc =~ s/%%NODE_GPG_KEYS%%/@{[join " \\\n     ", @$node_gpg_keys]}/;
-$doc =~ s/%%YARN_VERSION%%/$yarn->{version}/;
-$doc =~ s/%%YARN_GPG_KEY%%/@{[join " ", @$yarn_gpg_keys]}/;
+    $doc =~ s/%%PHP_VERSION%%/$php->{version}/;
+    $doc =~ s/%%PHP_SHA256%%/$php->{sha256}/;
+    $doc =~ s/%%PHP_GPG_KEYS%%/$php->{gpg}/;
+    $doc =~ s/%%NODE_VERSION%%/$node->{version}/;
+    $doc =~ s/%%NODE_GPG_KEYS%%/@{[join " \\\n     ", @$node_gpg_keys]}/;
+    $doc =~ s/%%YARN_VERSION%%/$yarn->{version}/;
+    $doc =~ s/%%YARN_GPG_KEY%%/@{[join " ", @$yarn_gpg_keys]}/;
 
-mkdir "php$php_version" unless -d "php$php_version";
-mkdir "php$php_version/node$node_version" unless -d "php$php_version/node$node_version";
+    mkdir "php$php_version" unless -d "php$php_version";
+    mkdir "php$php_version/node$node_version" unless -d "php$php_version/node$node_version";
 
-my $dir = "php$php_version/node$node_version";
-open $fh, '>', "$dir/Dockerfile" or die $!;
-print $fh $doc;
-close $fh;
+    my $dir = "php$php_version/node$node_version";
+    open $fh, '>', "$dir/$name" or die $!;
+    print $fh $doc;
+    close $fh;
 
-`cp ssh_config $dir`;
-`cp dockerd-entrypoint.sh $dir`;
+    chmod 0755, "$dir/$name" if -x "template/$name";
+}
+
+execute_template 'Dockerfile';
+execute_template 'ssh_config';
+execute_template 'dockerd-entrypoint.sh';
 
 __END__
 
