@@ -4,7 +4,7 @@ set -e
 /usr/local/bin/dockerd \
 	--host=unix:///var/run/docker.sock \
 	--host=tcp://127.0.0.1:2375 \
-	--storage-driver=overlay2 >/var/log/docker.log 2>&1 &
+	--storage-driver=overlay2 &>/var/log/docker.log &
 
 
 tries=0
@@ -16,7 +16,7 @@ do
 		echo 'Timed out trying to connect to internal docker host.' >&2
 		exit 1
 	fi
-        tries=$(( tries + 1 ))
+        tries=$(( $tries + 1 ))
 	sleep 1
 done
 
