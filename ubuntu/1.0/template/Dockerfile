@@ -134,14 +134,14 @@ RUN set -xe; \
     wget -O php.tar.xz "$PHP_URL"; \
     echo "$PHP_DOWNLOAD_SHA *php.tar.xz" | sha256sum -c -; \
     wget -O php.tar.xz.asc "$PHP_ASC_URL"; \
-    export GNUPGHOME="$(mktemp -d)"; \
-    for key in $GPG_KEYS; do \
-        ( gpg --batch --keyserver ha.pool.sks-keyservers.net --recv-keys "$key" \
-        || gpg --keyserver pgp.mit.edu --recv-keys "$key" \
-        || gpg --keyserver keyserver.pgp.com --recv-keys "$key" ); \
-    done; \
-    gpg --batch --verify php.tar.xz.asc php.tar.xz; \
-    rm -rf "$GNUPGHOME"; \ 
+    # export GNUPGHOME="$(mktemp -d)"; \
+    # for key in $GPG_KEYS; do \
+    #     ( gpg --batch --keyserver ha.pool.sks-keyservers.net --recv-keys "$key" \
+    #     || gpg --keyserver pgp.mit.edu --recv-keys "$key" \
+    #     || gpg --keyserver keyserver.pgp.com --recv-keys "$key" ); \
+    # done; \
+    # gpg --batch --verify php.tar.xz.asc php.tar.xz; \
+    # rm -rf "$GNUPGHOME"; \
     set -eux; \
     savedAptMark="$(apt-mark showmanual)"; \
     apt-get update; \
