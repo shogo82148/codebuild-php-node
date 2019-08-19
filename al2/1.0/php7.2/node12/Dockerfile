@@ -39,7 +39,6 @@ RUN set -ex \
     && ssh-keyscan -t rsa,dsa -H bitbucket.org >> ~/.ssh/known_hosts \
     && chmod 600 ~/.ssh/known_hosts \
     && yum install -y $EPEL_REPO $TRINITY_REPO \
-    && amazon-linux-extras enable corretto8 \
     && yum groupinstall -y "Development tools" \
     && yum install -y wget fakeroot \
        dirmngr bzr mercurial procps-ng \
@@ -58,7 +57,9 @@ RUN set -ex \
        perl-IO-Pty-Easy libserf subversion-perl tcl perl-TimeDate \
        perl-YAML-LibYAML bzrtools python-configobj \
        sgml-common xmlto libxslt \
-       tk xorg-x11-server-Xvfb expect parallel rsync \
+       tk expect parallel rsync \
+    && rm -rf /var/cache/yum/* \
+    && yum clean all \
     && wget https://github.com/stedolan/jq/releases/download/jq-${JQ_VERSION}/jq-linux64 -O /usr/local/bin/jq \
     && echo "$JQ_SHA256 /usr/local/bin/jq" | sha256sum -c - \
     && chmod +x /usr/local/bin/jq
@@ -153,7 +154,8 @@ RUN yum install -y tcl-devel tk-devel bzip2-devel gdbm-devel libuuid-devel \
     && ln -s pydoc3 pydoc \
     && ln -s python3 python \
     && ln -s python3-config python-config \
-        && rm -fr /tmp/* /var/tmp/*
+    && rm -rf /var/cache/yum/* \
+    && yum clean all
 #****************      END PYTHON     *********************************************
 
 ENV PATH="/root/.local/bin:$PATH"
@@ -242,7 +244,8 @@ RUN set -ex \
      mkdir "$PHP_INI_DIR"; \
      mkdir "$PHP_INI_DIR/conf.d"; \
      touch "$PHP_INI_DIR/conf.d/memory.ini" \
-     && echo "memory_limit = 1G;" >> "$PHP_INI_DIR/conf.d/memory.ini";
+     && echo "memory_limit = 1G;" >> "$PHP_INI_DIR/conf.d/memory.ini"; \
+     rm -rf /var/cache/yum/* && yum clean all
 
  ENV PATH="$PHPPATH/bin:/usr/local/php/bin:$PATH"
 
@@ -255,18 +258,16 @@ RUN set -ex \
  ENV N_SRC_DIR="$SRC_DIR/n"
 
  RUN git clone https://github.com/tj/n $N_SRC_DIR \
-     && cd $N_SRC_DIR && make install \
-     && n $NODE_VERSION && npm install --save-dev -g grunt && npm install --save-dev -g grunt-cli && npm install --save-dev -g webpack \
-     && curl -sSL https://dl.yarnpkg.com/rpm/yarn.repo | tee /etc/yum.repos.d/yarn.repo \
-     && rpm --import https://dl.yarnpkg.com/rpm/pubkey.gpg \
-     && yum install -y yarn \
-     && yarn --version \
-     && cd / && rm -rf $N_SRC_DIR;
+    && cd $N_SRC_DIR && make install \
+    && n $NODE_VERSION && npm install --save-dev -g grunt && npm install --save-dev -g grunt-cli && npm install --save-dev -g webpack \
+    && curl -sSL https://dl.yarnpkg.com/rpm/yarn.repo | tee /etc/yum.repos.d/yarn.repo \
+    && rpm --import https://dl.yarnpkg.com/rpm/pubkey.gpg \
+    && yum install -y yarn \
+    && yarn --version \
+    && cd / && rm -rf $N_SRC_DIR \
+    && rm -rf /var/cache/yum/* \
+    && yum clean all
 
 #****************      END NODEJS     ****************************************************
-
-# Cleanup
-RUN set -ex \
-    && yum clean all
 
 ENTRYPOINT ["dockerd-entrypoint.sh"]
