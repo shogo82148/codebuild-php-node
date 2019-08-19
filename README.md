@@ -4,18 +4,38 @@ AWS CodeBuild Images for building PHP and Node applications
 ## Purpose
 
 It is a CodeBuild custom image including PHP and Node.js runtime, based on [AWS CodeBuild curated Docker images](https://github.com/aws/aws-codebuild-docker-images).
-The image is used for PHP and JavaScript Project, such as [roots/sage](https://github.com/roots/sage).
+The image is optimized for PHP and JavaScript Project, such as [roots/sage](https://github.com/roots/sage).
 
 ## Usage
 
-Prebuild images are available on Dockerhub.
+Pre-build images are available on DockerHub.
 
 - [shogo82148/codebuild-php-node](https://hub.docker.com/r/shogo82148/codebuild-php-node)
 
 Docker Pull Command:
 
-```
-docker pull shogo82148/codebuild-php-node
+```bash
+# standard 1.0 based
+docker pull shogo82148/codebuild-php-node:php7.3-node12
+docker pull shogo82148/codebuild-php-node:php7.3-node10
+docker pull shogo82148/codebuild-php-node:php7.2-node12
+docker pull shogo82148/codebuild-php-node:php7.2-node10
+docker pull shogo82148/codebuild-php-node:php7.3-node12-standard-1.0
+docker pull shogo82148/codebuild-php-node:php7.3-node10-standard-1.0
+docker pull shogo82148/codebuild-php-node:php7.2-node12-standard-1.0
+docker pull shogo82148/codebuild-php-node:php7.2-node10-standard-1.0
+
+# standard 2.0 based
+docker pull shogo82148/codebuild-php-node:php7.3-node12-standard-2.0
+docker pull shogo82148/codebuild-php-node:php7.3-node10-standard-2.0
+docker pull shogo82148/codebuild-php-node:php7.2-node12-standard-2.0
+docker pull shogo82148/codebuild-php-node:php7.2-node10-standard-2.0
+
+# amazonlinux2-x86_64-standard 1.0 based
+docker pull shogo82148/codebuild-php-node:php7.3-node12-amazonlinux-1.0
+docker pull shogo82148/codebuild-php-node:php7.3-node10-amazonlinux-1.0
+docker pull shogo82148/codebuild-php-node:php7.2-node12-amazonlinux-1.0
+docker pull shogo82148/codebuild-php-node:php7.2-node10-amazonlinux-1.0
 ```
 
 ### An Example of CloudFormation Template for Creating CodeBuild Project
