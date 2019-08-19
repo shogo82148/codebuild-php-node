@@ -39,7 +39,6 @@ RUN set -ex \
     && ssh-keyscan -t rsa,dsa -H bitbucket.org >> ~/.ssh/known_hosts \
     && chmod 600 ~/.ssh/known_hosts \
     && yum install -y $EPEL_REPO $TRINITY_REPO \
-    && amazon-linux-extras enable corretto8 \
     && yum groupinstall -y "Development tools" \
     && yum install -y wget fakeroot \
        dirmngr bzr mercurial procps-ng \
