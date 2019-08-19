@@ -8,15 +8,15 @@ runtimes:
           - echo "Installing Python version 3.7 ..."
   php:
     versions:
-      7.3.8:
+      7.3:
         commands:
-          - echo "Installing PHP version %%PHP_VERSION%% ..."
+          - echo "Installing PHP version 7.3 ..."
   nodejs:
     versions:
       12.8.1:
         commands:
-          - echo "Installing Node.js version %%NODE_VERSION%% ..."
-          - n %%NODE_VERSION%%
+          - echo "Installing Node.js version 12.8.1 ..."
+          - n 12.8.1
   docker:
     versions:
       18:
