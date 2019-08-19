@@ -3,15 +3,15 @@ version: 0.1
 runtimes:
   php:
     versions:
-      7.2.21:
+      7.2:
         commands:
-          - echo "Installing PHP version %%PHP_VERSION%% ..."
+          - echo "Installing PHP version 7.2 ..."
   nodejs:
     versions:
-      12.8.1:
+      12:
         commands:
-          - echo "Installing Node.js version %%NODE_VERSION%% ..."
-          - n %%NODE_VERSION%%
+          - echo "Installing Node.js version 12.8.1 ..."
+          - n 12.8.1
   docker:
     versions:
       18:

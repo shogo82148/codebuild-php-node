@@ -3,12 +3,12 @@ version: 0.1
 runtimes:
   php:
     versions:
-      %%PHP_VERSION%%:
+      %%PHP_MINOR_VERSION%%:
         commands:
-          - echo "Installing PHP version %%PHP_VERSION%% ..."
+          - echo "Installing PHP version %%PHP_MINOR_VERSION%% ..."
   nodejs:
     versions:
-      %%NODE_VERSION%%:
+      %%NODE_MAJOR_VERSION%%:
         commands:
           - echo "Installing Node.js version %%NODE_VERSION%% ..."
           - n %%NODE_VERSION%%

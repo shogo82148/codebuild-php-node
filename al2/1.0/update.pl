@@ -75,10 +75,12 @@ sub execute_template {
     my $doc = do { local $/ = undef; <$fh>; };
     close $fh;
 
-    $doc =~ s/%%PHP_VERSION%%/$php->{version}/;
-    $doc =~ s/%%PHP_SHA256%%/$php->{sha256}/;
-    $doc =~ s/%%PHP_GPG_KEYS%%/$php->{gpg}/;
-    $doc =~ s/%%NODE_VERSION%%/$node->{version}/;
+    $doc =~ s/%%PHP_MINOR_VERSION%%/$php_version/g;
+    $doc =~ s/%%PHP_VERSION%%/$php->{version}/g;
+    $doc =~ s/%%PHP_SHA256%%/$php->{sha256}/g;
+    $doc =~ s/%%PHP_GPG_KEYS%%/$php->{gpg}/g;
+    $doc =~ s/%%NODE_MAJOR_VERSION%%/$node_version/g;
+    $doc =~ s/%%NODE_VERSION%%/$node->{version}/g;
 
     mkdir "php$php_version" unless -d "php$php_version";
     mkdir "php$php_version/node$node_version" unless -d "php$php_version/node$node_version";
