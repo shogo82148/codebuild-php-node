@@ -1,4 +1,4 @@
-name: Docker Image CI
+name: Update
 
 on: [push, pull_request]
 
@@ -11,10 +11,8 @@ jobs:
     steps:
     - uses: actions/checkout@v1
     - name: Checking Update
-      run: |
-        set -e
-        cpanm JSON
-        ./update.sh
+      uses: docker://perl:5.30
+      run: ./update.sh
     - name: Commit
       run: |
         set -e
