@@ -13,7 +13,6 @@ jobs:
     - name: Checking Update
       uses: "docker://perl:5.30"
       with:
-        entrypoint: /bin/bash -c
         args: "cpanm JSON && ./update.sh"
     - name: Commit
       run: |
