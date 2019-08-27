@@ -11,7 +11,10 @@ jobs:
     steps:
     - uses: actions/checkout@v1
     - name: Checking Update
-      run: ./update.sh
+      run: |
+        set -e
+        cpanm JSON
+        ./update.sh
     - name: Commit
       run: |
         set -e
