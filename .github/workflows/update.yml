@@ -11,8 +11,10 @@ jobs:
     steps:
     - uses: actions/checkout@v1
     - name: Checking Update
-      uses: docker://perl:5.30
-      run: ./update.sh
+      uses: "docker://perl:5.30"
+      with:
+        entrypoint: /bin/bash
+        args: ./update.sh
     - name: Commit
       run: |
         set -e
