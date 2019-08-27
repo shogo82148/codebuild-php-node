@@ -1,0 +1,23 @@
+name: Docker Image CI
+
+on: push
+
+jobs:
+
+  build:
+ 
+    runs-on: ubuntu-latest
+ 
+    steps:
+    - uses: actions/checkout@v1
+    - name: Checking Update
+      run: ./update
+    - name: Commit
+      run: |
+        set -e
+        git config --global user.name "Ichinose Shogo"
+        git config --global user.email shogo82148@gmail.com
+        git checkout -b hogehoge-test
+        git add .
+        git commit --allow-empty -m 'foobar'
+        git push -u origin hogehoge-test
