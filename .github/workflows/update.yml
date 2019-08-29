@@ -19,14 +19,14 @@ jobs:
         GITHUB_REPOSITORY: $GITHUB_REPOSITORY
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
-        set -e
+        branch=update-$(date +"%Y-%m-%d-%H-%M-%S")
         git config --global user.name "Ichinose Shogo"
         git config --global user.email shogo82148@gmail.com
-        git switch -c hogehoge-test
+        git switch -c $branch
         git add .
-        git commit --allow-empty -m 'foobar'
+        git commit -m "Update $(date +"%Y-%m-%d %H:%M:%S")" || exit 0
         header=$(echo -n "shogo82148:${GITHUB_TOKEN}" | base64)
         git -c http.extraheader="AUTHORIZATION: basic $header" push -u origin hogehoge-test
         curl -H "Authorization: token $GITHUB_TOKEN" \
-          -d "$(jq -n '{ "title": "Amazing new feature", "base": "master", "head": "hogehoge-test" }')" \
+          -d "$(jq --arg branch $branch -n '{ "title": "Amazing new feature", "base": "master", "head": $branch }')" \
           "https://api.github.com/repos/$GITHUB_REPOSITORY/pulls"
