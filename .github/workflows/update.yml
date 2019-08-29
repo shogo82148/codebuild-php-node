@@ -27,6 +27,7 @@ jobs:
         git commit --allow-empty -m 'foobar'
         header=$(echo -n "shogo82148:${GITHUB_TOKEN}" | base64)
         git -c http.extraheader="AUTHORIZATION: basic $header" push -u origin hogehoge-test
+        sleep 5
     - name: Create Pull Request
       uses: wei/pull-request@v1
       env:
