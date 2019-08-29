@@ -25,7 +25,7 @@ jobs:
         git switch -c $branch
         git add .
         git commit -m "Update $(date +"%Y-%m-%d %H:%M:%S")" || exit 0
-        header=$(echo -n "${GITHUB_TOKEN}:x-oauth-basic" | base64)
+        header=$(echo -n "${GITHUB_ACTOR}:${GITHUB_TOKEN}" | base64)
         git -c http.extraheader="AUTHORIZATION: basic $header" push -u origin $branch
         curl -H "Authorization: token $GITHUB_TOKEN" \
           -d "$(jq --arg branch $branch -n '{ "title": "Amazing new feature", "base": "master", "head": $branch }')" \
