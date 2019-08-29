@@ -1,6 +1,6 @@
 name: Update
 
-on: [push, pull_request]
+on: [pull_request]
 
 jobs:
 
@@ -25,5 +25,11 @@ jobs:
         git checkout -b hogehoge-test
         git add .
         git commit --allow-empty -m 'foobar'
-        header=$(echo -n "shogo82148:${GITHUB_TOKEN}" | base64)
-        git -c http.extraheader="AUTHORIZATION: basic $header" push -u origin hogehoge-test
+        # header=$(echo -n "shogo82148:${GITHUB_TOKEN}" | base64)
+        # git -c http.extraheader="AUTHORIZATION: basic $header" push -u origin hogehoge-test
+    - name: Create Pull Request
+      uses: wei/pull-request@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        DESTINATION_BRANCH: "master"
+        SOURCE_BRANCH: "hogehoge-test"
