@@ -1,6 +1,8 @@
 name: Update
 
-on: [pull_request]
+on:
+  schedule:
+  - cron: 53 5 * * *
 
 jobs:
 
