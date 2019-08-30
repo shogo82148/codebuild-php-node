@@ -1,0 +1,23 @@
+name: AmzonLinux2 1.0
+
+on:
+  push:
+  - al2/1.0/*/*/*
+  pull_request:
+  - al2/1.0/*/*/*
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php:
+        - "7.2"
+        - "7.3"
+        node:
+        - "10"
+        - "12"
+    steps:
+    - uses: actions/checkout@v1
+    - name: Build the Docker image
+      run: docker build "al2/1.0/php${{ matrix.php }}/node${{ matrix.node }}"
