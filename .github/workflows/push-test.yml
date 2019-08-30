@@ -30,7 +30,7 @@ jobs:
         docker tag "$TAG" "$PACKAGE"
         docker push "$PACKAGE"
       env:
-        USERNAME: ${{ github.actor }}
+        USERNAME: shogo82148
         PASSWORD: ${{ secrets.token }}
         TAG: "${{ secrets.username }}/codebuild-php-node:php${{ matrix.php }}-node${{ matrix.node }}-amazonlinux2-1.0"
         PACKAGE: "docker.pkg.github.com/${{ github.repository }}/codebuild-php-node:php${{ matrix.php }}-node${{ matrix.node }}-amazonlinux2-1.0"
