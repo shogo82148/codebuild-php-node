@@ -1,0 +1,45 @@
+name: amazonlinux2-1.0
+
+on:
+  push
+  pull_request
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php:
+        - "7.2"
+        - "7.3"
+        node:
+        - "10"
+        - "12"
+    steps:
+    - name: Build the Docker image
+      run: |
+        docker pull amazonlinux:2
+        docker tag amazonlinux:2 "$TAG"
+      env:
+        TAG: "${{ secrets.username }}/codebuild-php-node:php${{ matrix.php }}-node${{ matrix.node }}-amazonlinux2-1.0"
+    - name: Publish to the Docker Hub
+      run: |
+        printenv PASSWORD | docker login -u "$USERNAME" --password-stdin
+        docker push "$TAG"
+      env:
+        USERNAME: ${{ secrets.username }}
+        PASSWORD: ${{ secrets.password }}
+        TAG: "${{ secrets.username }}/codebuild-php-node:php${{ matrix.php }}-node${{ matrix.node }}-amazonlinux2-1.0"
+      # if: github.ref == 'master'
+    - name: Publish to the GitHub package registry
+      run: |
+        echo "$USERNAME"
+        printenv PASSWORD | docker login docker.pkg.github.com -u "$USERNAME" --password-stdin
+        docker tag "$TAG" "$PACKAGE"
+        docker push "$PACKAGE"
+      env:
+        USERNAME: ${{ github.actor }}
+        PASSWORD: ${{ secrets.GITHUB_TOKEN }}
+        TAG: "${{ secrets.username }}/codebuild-php-node:php${{ matrix.php }}-node${{ matrix.node }}-amazonlinux2-1.0"
+        PACKAGE: "docker.pkg.github.com/${{ github.repository }}/codebuild-php-node:php${{ matrix.php }}-node${{ matrix.node }}-amazonlinux2-1.0"
+      # if: github.ref == 'master' 
