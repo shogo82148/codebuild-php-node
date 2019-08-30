@@ -1,4 +1,4 @@
-name: AmzonLinux2 1.0
+name: amazonlinux2-1.0
 
 on:
   push:
