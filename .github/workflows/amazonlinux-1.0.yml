@@ -32,3 +32,8 @@ jobs:
         docker login docker.pkg.github.com -u ${{ github.actor }} -p ${{ secrets.GITHUB_TOKEN }}
         docker tag "shogo82148/codebuild-php-node:php${{ matrix.php }}-node${{ matrix.node }}-amazonlinux2-1.0" \
           "docker.pkg.github.com/${{ github.repository }}/codebuild-php-node:php${{ matrix.php }}-node${{ matrix.node }}-amazonlinux2-1.0"
+        docker push "docker.pkg.github.com/${{ github.repository }}/codebuild-php-node:php${{ matrix.php }}-node${{ matrix.node }}-amazonlinux2-1.0"
+    - name: Publish to the Docker Hub
+      run: |
+        docker login -u ${{ secrets.username }} -p ${{ secrets.password }}
+        docker push "shogo82148/codebuild-php-node:php${{ matrix.php }}-node${{ matrix.node }}-amazonlinux2-1.0"
