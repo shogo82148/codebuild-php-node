@@ -48,5 +48,5 @@ jobs:
         USERNAME: ${{ github.actor }}
         PASSWORD: ${{ secrets.token }}
         TAG: "${{ secrets.username }}/codebuild-php-node:php${{ matrix.php }}-node${{ matrix.node }}-standard-2.0"
-        PACKAGE: "docker.pkg.github.com/${{ github.repository }}/codebuild-php-node:php${{ matrix.php }}-node${{ matrix.node }}-standard-2.0"
+        PACKAGE: "docker.pkg.github.com/${{ github.repository }}/php${{ matrix.php }}-node${{ matrix.node }}-standard-2.0:latest"
       if: github.ref == 'master' 
