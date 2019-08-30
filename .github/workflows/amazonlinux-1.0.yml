@@ -24,4 +24,6 @@ jobs:
     steps:
     - uses: actions/checkout@v1
     - name: Build the Docker image
-      run: docker build "al2/1.0/php${{ matrix.php }}/node${{ matrix.node }}"
+      run: |
+        docker build "al2/1.0/php${{ matrix.php }}/node${{ matrix.node }}" \
+          --tag "shogo82148/codebuild-php-node:php${{ matrix.php }}-node${{ matrix.node }}-amazonlinux2-1.0"
