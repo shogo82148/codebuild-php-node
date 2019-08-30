@@ -27,3 +27,8 @@ jobs:
       run: |
         docker build "al2/1.0/php${{ matrix.php }}/node${{ matrix.node }}" \
           --tag "shogo82148/codebuild-php-node:php${{ matrix.php }}-node${{ matrix.node }}-amazonlinux2-1.0"
+    - name: Publish to the GitHub package registry
+      run: |
+        docker login docker.pkg.github.com -u ${{ github.actor }} -p ${{ secret.GITHUB_TOKEN }}
+        docker tag "shogo82148/codebuild-php-node:php${{ matrix.php }}-node${{ matrix.node }}-amazonlinux2-1.0" \
+          "docker.pkg.github.com/${{ github.repository }}/codebuild-php-node:php${{ matrix.php }}-node${{ matrix.node }}-amazonlinux2-1.0"
