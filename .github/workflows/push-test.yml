@@ -25,8 +25,9 @@ jobs:
 
     - name: Publish to the GitHub package registry
       run: |
+        set -uex
         echo "$USERNAME"
-        printenv PASSWORD | docker login docker.pkg.github.com -u "$USERNAME" --password-stdin
+        docker login docker.pkg.github.com -u $USERNAME -p $PASSWORD
         docker tag "$TAG" "$PACKAGE"
         docker push "$PACKAGE"
       env:
