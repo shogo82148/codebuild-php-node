@@ -22,15 +22,7 @@ jobs:
         docker tag amazonlinux:2 "$TAG"
       env:
         TAG: "${{ secrets.username }}/codebuild-php-node:php${{ matrix.php }}-node${{ matrix.node }}-amazonlinux2-1.0"
-    - name: Publish to the Docker Hub
-      run: |
-        printenv PASSWORD | docker login -u "$USERNAME" --password-stdin
-        docker push "$TAG"
-      env:
-        USERNAME: ${{ secrets.username }}
-        PASSWORD: ${{ secrets.password }}
-        TAG: "${{ secrets.username }}/codebuild-php-node:php${{ matrix.php }}-node${{ matrix.node }}-amazonlinux2-1.0"
-      # if: github.ref == 'master'
+
     - name: Publish to the GitHub package registry
       run: |
         echo "$USERNAME"
