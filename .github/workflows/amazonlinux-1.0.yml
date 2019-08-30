@@ -4,9 +4,11 @@ on:
   push:
     paths:
     - al2/1.0/*/*/*
+    - .github/workflows/amazonlinux-1.0.yml
   pull_request:
     paths:
     - al2/1.0/*/*/*
+    - .github/workflows/amazonlinux-1.0.yml
 
 jobs:
   build:
