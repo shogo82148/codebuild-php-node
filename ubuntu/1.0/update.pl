@@ -66,7 +66,6 @@ my $node_gpg_keys = [
 my $node = do {
     my $info = `curl  -sSL --compressed https://nodejs.org/dist/`;
     my @lines = split /\n/, $info;
-    print $lines[0];
     @lines = map {
         $_ =~ m(<a\s+href="v($node_version[.][^/"]+)/?") ? $1 : ()
     } @lines;
