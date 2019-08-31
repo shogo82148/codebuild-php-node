@@ -42,11 +42,12 @@ jobs:
       run: |
         echo "$USERNAME"
         printenv PASSWORD | docker login docker.pkg.github.com -u "$USERNAME" --password-stdin
-        docker tag "$TAG" "$PACKAGE"
-        docker push "$PACKAGE"
+        docker tag "$TAG" "$PACKAGE:$(date --date "$DATE" -u +"%Y-%m-%d")"
+        docker push "$PACKAGE:$(date --date "$DATE" -u +"%Y-%m-%d")"
       env:
         USERNAME: ${{ github.actor }}
         PASSWORD: ${{ secrets.token }}
         TAG: "${{ secrets.username }}/codebuild-php-node:php${{ matrix.php }}-node${{ matrix.node }}-standard-2.0"
-        PACKAGE: "docker.pkg.github.com/${{ github.repository }}/php${{ matrix.php }}-node${{ matrix.node }}-standard-2.0:latest"
+        PACKAGE: "docker.pkg.github.com/${{ github.repository }}/php${{ matrix.php }}-node${{ matrix.node }}-standard-2.0"
+        DATE: ${{ github.event.head_commit.timestamp }}
       if: github.ref == 'refs/heads/master' 
