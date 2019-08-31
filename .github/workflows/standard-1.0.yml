@@ -37,7 +37,7 @@ jobs:
         USERNAME: ${{ secrets.username }}
         PASSWORD: ${{ secrets.password }}
         TAG: "${{ secrets.username }}/codebuild-php-node:php${{ matrix.php }}-node${{ matrix.node }}-standard-1.0"
-      if: github.ref == 'master'
+      if: github.ref == 'refs/heads/master'
     - name: Publish to the GitHub package registry
       run: |
         echo "$USERNAME"
@@ -49,4 +49,4 @@ jobs:
         PASSWORD: ${{ secrets.token }}
         TAG: "${{ secrets.username }}/codebuild-php-node:php${{ matrix.php }}-node${{ matrix.node }}-standard-1.0"
         PACKAGE: "docker.pkg.github.com/${{ github.repository }}/php${{ matrix.php }}-node${{ matrix.node }}-standard-1.0:latest"
-      if: github.ref == 'master' 
+      if: github.ref == 'refs/heads/master' 
