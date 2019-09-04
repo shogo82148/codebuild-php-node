@@ -41,7 +41,7 @@ RUN set -ex \
     && yum install -y $EPEL_REPO $TRINITY_REPO \
     && yum groupinstall -y "Development tools" \
     && yum install -y wget fakeroot \
-       dirmngr bzr mercurial procps-ng \
+       bzr mercurial procps-ng \
        ImageMagick \
        openssl-devel libdb-devel \
        libevent-devel libffi-devel GeoIP-devel glib2-devel \
