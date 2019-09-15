@@ -32,7 +32,7 @@ jobs:
         TAG: "${{ secrets.username }}/codebuild-php-node:php${{ matrix.php }}-node${{ matrix.node }}-amazonlinux2-1.0"
     - name: Publish to the Docker Hub
       run: |
-        printenv PASSWORD | docker login -u "$USERNAME" --password-stdin
+        docker login -u "$USERNAME" -p "$PASSWORD"
         docker push "$TAG"
       env:
         USERNAME: ${{ secrets.username }}
@@ -41,8 +41,7 @@ jobs:
       if: github.ref == 'refs/heads/master'
     - name: Publish to the GitHub package registry
       run: |
-        echo "$USERNAME"
-        printenv PASSWORD | docker login docker.pkg.github.com -u "$USERNAME" --password-stdin
+        docker login docker.pkg.github.com -u "$USERNAME" -p "$PASSWORD"
         docker tag "$TAG" "$PACKAGE"
         docker push "$PACKAGE"
       env:
