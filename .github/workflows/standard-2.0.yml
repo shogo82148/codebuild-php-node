@@ -38,7 +38,7 @@ jobs:
         USERNAME: ${{ secrets.username }}
         PASSWORD: ${{ secrets.password }}
         TAG: "${{ secrets.username }}/codebuild-php-node:php${{ matrix.php }}-node${{ matrix.node }}-standard-2.0"
-      if: github.ref == 'refs/heads/master'
+      # if: github.ref == 'refs/heads/master'
     - name: Publish to the GitHub package registry
       run: |
         echo "$USERNAME"
@@ -50,5 +50,5 @@ jobs:
         PASSWORD: ${{ secrets.token }}
         TAG: "${{ secrets.username }}/codebuild-php-node:php${{ matrix.php }}-node${{ matrix.node }}-standard-2.0"
         PACKAGE: "docker.pkg.github.com/${{ github.repository }}/php${{ matrix.php }}-node${{ matrix.node }}-standard-2.0:latest"
-      if: github.ref == 'refs/heads/master' 
-      continue-on-error: true # docker.pkg.github.com is in beta and unstable, so ignore error (2019-08-31)
+      # if: github.ref == 'refs/heads/master'
+      # continue-on-error: true # docker.pkg.github.com is in beta and unstable, so ignore error (2019-08-31)
