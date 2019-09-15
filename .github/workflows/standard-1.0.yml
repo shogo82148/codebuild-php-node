@@ -47,7 +47,7 @@ jobs:
         docker push "$PACKAGE"
       env:
         USERNAME: ${{ github.actor }}
-        PASSWORD: ${{ secrets.GITHUB_TOKEN }}
+        PASSWORD: ${{ secrets.token }}
         TAG: "${{ secrets.username }}/codebuild-php-node:php${{ matrix.php }}-node${{ matrix.node }}-standard-1.0"
         PACKAGE: "docker.pkg.github.com/${{ github.repository }}/php${{ matrix.php }}-node${{ matrix.node }}-standard-1.0:latest"
       # if: github.ref == 'refs/heads/master'
