@@ -12,6 +12,8 @@ jobs:
  
     steps:
     - uses: actions/checkout@v1
+      with:
+        ref: master
     - name: Checking Update
       uses: "docker://perl:5.30"
       with:
