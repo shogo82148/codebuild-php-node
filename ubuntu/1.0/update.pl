@@ -5,6 +5,30 @@ use strict;
 use warnings;
 use JSON qw(decode_json encode_json);
 
+sub curl {
+    my $url = shift;
+    my $cnt = 0;
+    my $sleep = 1;
+RETRY:
+    my $ret = `curl -sSL --compressed "$url"`;
+    if ($?) {
+        $cnt++;
+        if ($cnt > 10) {
+            die "fail to get $url";
+        }
+        print STDERR "fail to get $url...\n";
+
+        sleep $sleep;
+        $sleep *= 2;
+        if ($sleep > 30) {
+            $sleep = 30;
+        }
+        print STDERR "retry\n";
+        goto RETRY;
+    }
+    return $ret;
+}
+
 my $php_gpg_keys = {
     # https://wiki.php.net/todo/php73
     # cmb & stas
@@ -33,7 +57,7 @@ die "node verison is reqiored" unless $node_version;
 
 my $php = do {
     my ($major, $minor) = split /[.]/, $php_version;
-    my $json = decode_json(`curl -sSL "https://secure.php.net/releases/index.php?json&max=100&version=$major"`);
+    my $json = decode_json(curl("https://secure.php.net/releases/index.php?json&max=100&version=$major"));
     my @versions = (sort {
         my @a = split /[.]/, $a;
         my @b = split /[.]/, $b;
@@ -64,7 +88,7 @@ my $node_gpg_keys = [
 ];
 
 my $node = do {
-    my $info = `curl  -sSL --compressed https://nodejs.org/dist/`;
+    my $info = curl("https://nodejs.org/dist/");
     my @lines = split /\n/, $info;
     @lines = map {
         $_ =~ m(<a\s+href="v($node_version[.][^/"]+)/?") ? $1 : ()
@@ -86,7 +110,7 @@ my $yarn_gpg_keys = ["6A010C5166006599AA17F08146C2130DFD2497F5"];
 
 my $yarn = do {
     +{
-        version => `curl -sSL --compressed https://yarnpkg.com/latest-version`,
+        version => curl("https://yarnpkg.com/latest-version"),
     };
 };
 
