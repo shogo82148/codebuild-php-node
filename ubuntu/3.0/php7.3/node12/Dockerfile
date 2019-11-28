@@ -1,4 +1,4 @@
-# Copyright 2017-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+# Copyright 2017-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 #
 # Licensed under the Amazon Software License (the "License"). You may not use this file except in compliance with the License.
 # A copy of the License is located at
@@ -9,56 +9,65 @@
 # This file is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, express or implied.
 # See the License for the specific language governing permissions and limitations under the License.
 
-FROM amazonlinux:2
+FROM ubuntu:18.04
 
-ENV PYTHON_VERSION="3.7.3" \
- PHP_VERSION="7.2.25" \
+ENV PHP_VERSION="7.3.12" \
  NODE_VERSION="12.13.1" \
  JQ_VERSION="1.6" \
  JQ_SHA256="af986793a515d500ab2d35f8d2aecd656e764504b789b66d7e1a0b727a124c44" \
- DOCKER_VERSION="18.09.6" \
+ DOCKER_VERSION="19.03.1" \
  DOCKER_COMPOSE_VERSION="1.24.0"
 
 #****************        Utilities     ********************************************* 
 ENV DOCKER_BUCKET="download.docker.com" \    
     DOCKER_CHANNEL="stable" \
-    DOCKER_SHA256="1f3f6774117765279fce64ee7f76abbb5f260264548cf80631d68fb2d795bb09" \
+    DOCKER_SHA256="6e7d8e24ee46b13d7547d751696d01607d19c8224c1b2c867acc8c779e77734b" \
     DIND_COMMIT="3b5fac462d21ca164b3778647420016315289034" \    
     GITVERSION_VERSION="4.0.0" \
     DEBIAN_FRONTEND="noninteractive" \
-    SRC_DIR="/usr/src" \
-    EPEL_REPO="https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm"
+    SRC_DIR="/usr/src"
 
 # Install git, SSH, and other utilities
 RUN set -ex \
-    && yum install -y openssh-clients \
+    && echo 'Acquire::CompressionTypes::Order:: "gz";' > /etc/apt/apt.conf.d/99use-gzip-compression \
+    && apt-get update \
+    && apt install -y apt-transport-https \
+    && apt-get update \
+    && apt-get install software-properties-common -y --no-install-recommends \
+    && apt-add-repository -y ppa:git-core/ppa \
+    && apt-get update \
+    && apt-get install git=1:2.* -y --no-install-recommends \
+    && git version \
+    && apt-get install -y --no-install-recommends openssh-client \
     && mkdir ~/.ssh \
     && touch ~/.ssh/known_hosts \
     && ssh-keyscan -t rsa,dsa -H github.com >> ~/.ssh/known_hosts \
     && ssh-keyscan -t rsa,dsa -H bitbucket.org >> ~/.ssh/known_hosts \
     && chmod 600 ~/.ssh/known_hosts \
-    && yum install -y $EPEL_REPO \
-    && yum groupinstall -y "Development tools" \
-    && yum install -y wget fakeroot \
-       bzr mercurial procps-ng \
-       ImageMagick \
-       openssl-devel libdb-devel \
-       libevent-devel libffi-devel GeoIP-devel glib2-devel \
-       libjpeg-devel krb5-server xz-devel \
-       mariadb-devel \
-       ncurses-devel postgresql-devel readline-devel \
-       libsqlite3x-devel libwebp-devel \
-       libxml2-devel libxslt-devel libyaml-devel \
+    && apt-get install -y --no-install-recommends \
+       wget python3 python3-dev python3-pip python3-setuptools fakeroot ca-certificates \
+       netbase gnupg dirmngr bzr mercurial procps \
+       tar gzip zip autoconf automake \
+       bzip2 file g++ gcc imagemagick \
+       libbz2-dev libc6-dev libcurl4-openssl-dev libdb-dev \
+       libevent-dev libffi-dev libgeoip-dev libglib2.0-dev \
+       libjpeg-dev libkrb5-dev liblzma-dev \
+       libmagickcore-dev libmagickwand-dev libmysqlclient-dev \
+       libncurses5-dev libpq-dev libreadline-dev \
+       libsqlite3-dev libssl-dev libtool libwebp-dev \
+       libxml2-dev libxslt1-dev libyaml-dev make \
+       patch xz-utils zlib1g-dev unzip curl \
        e2fsprogs iptables xfsprogs \
-       groff \
-       asciidoc cvs cvsps docbook-dtds docbook-style-xsl \
-       perl-DBD-SQLite perl-DBI perl-HTTP-Date \
-       perl-IO-Pty-Easy libserf subversion-perl tcl perl-TimeDate \
-       perl-YAML-LibYAML bzrtools python-configobj \
-       sgml-common xmlto libxslt \
-       tk expect parallel rsync \
-    && rm -rf /var/cache/yum/* \
-    && yum clean all \
+       less groff liberror-perl \
+       asciidoc build-essential bzr cvs cvsps docbook-xml docbook-xsl dpkg-dev \
+       libdbd-sqlite3-perl libdbi-perl libdpkg-perl libhttp-date-perl \
+       libio-pty-perl libserf-1-1 libsvn-perl libsvn1 libtcl8.6 libtimedate-perl \
+       libxml2-utils libyaml-perl python-bzrlib python-configobj \
+       sgml-base sgml-data subversion tcl tcl8.6 xml-core xmlto xsltproc \
+       tk gettext gettext-base libapr1 libaprutil1 xvfb expect parallel \
+       locales rsync \
+    && rm -rf /var/lib/apt/lists/* \
+    && apt-get clean \
     && wget https://github.com/stedolan/jq/releases/download/jq-${JQ_VERSION}/jq-linux64 -O /usr/local/bin/jq \
     && echo "$JQ_SHA256 /usr/local/bin/jq" | sha256sum -c - \
     && chmod +x /usr/local/bin/jq
@@ -71,7 +80,7 @@ RUN set -ex \
     && rm docker.tgz \
     && docker -v \
 # set up subuid/subgid so that "--userns-remap=default" works out-of-the-box
-    && groupadd dockremap \
+    && addgroup dockremap \
     && useradd -g dockremap dockremap \
     && echo 'dockremap:165536:65536' >> /etc/subuid \
     && echo 'dockremap:165536:65536' >> /etc/subgid \
@@ -83,9 +92,13 @@ RUN set -ex \
 
 # https://docs.aws.amazon.com/eks/latest/userguide/install-aws-iam-authenticator.html https://docs.aws.amazon.com/AmazonECS/latest/developerguide/ECS_CLI_installation.html
 RUN curl -sS -o /usr/local/bin/aws-iam-authenticator https://amazon-eks.s3-us-west-2.amazonaws.com/1.11.5/2018-12-06/bin/linux/amd64/aws-iam-authenticator \
- && curl -sS -o /usr/local/bin/kubectl https://amazon-eks.s3-us-west-2.amazonaws.com/1.11.5/2018-12-06/bin/linux/amd64/kubectl \
- && curl -sS -o /usr/local/bin/ecs-cli https://s3.amazonaws.com/amazon-ecs-cli/ecs-cli-linux-amd64-latest \
- && chmod +x /usr/local/bin/kubectl /usr/local/bin/aws-iam-authenticator /usr/local/bin/ecs-cli
+    && curl -sS -o /usr/local/bin/kubectl https://amazon-eks.s3-us-west-2.amazonaws.com/1.11.5/2018-12-06/bin/linux/amd64/kubectl \
+    && curl -sS -o /usr/local/bin/ecs-cli https://s3.amazonaws.com/amazon-ecs-cli/ecs-cli-linux-amd64-latest \
+    && chmod +x /usr/local/bin/kubectl /usr/local/bin/aws-iam-authenticator /usr/local/bin/ecs-cli
+
+RUN set -ex \
+    && pip3 install --upgrade setuptools wheel \
+    && pip3 install awscli boto3  
 
 VOLUME /var/lib/docker
 
@@ -96,102 +109,38 @@ COPY runtimes.yml /codebuild/image/config/runtimes.yml
 
 COPY dockerd-entrypoint.sh /usr/local/bin/
 
-#****************        PYTHON     *********************************************
-ENV PATH="/usr/local/bin:$PATH" \
-    GPG_KEY="0D96DF4D4110E5C43FBFB17F2D347EA6AA65421D" \
-    PYTHON_PIP_VERSION="19.1.1" \
-    LC_ALL=C.UTF-8 \
-    LANG=C.UTF-8
-
-RUN yum install -y tcl-devel tk-devel bzip2-devel gdbm-devel libuuid-devel \
-    && wget -O python.tar.xz "https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tar.xz" \
-    && wget -O python.tar.xz.asc "https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tar.xz.asc" \
-    && export GNUPGHOME="$(mktemp -d)" \
-    && (gpg --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys "$GPG_KEY" \
-        || gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys "$GPG_KEY" \
-        || gpg --keyserver pgp.mit.edu --recv-keys "$GPG_KEY") \
-    && gpg --batch --verify python.tar.xz.asc python.tar.xz \
-    && rm -r "$GNUPGHOME" python.tar.xz.asc \
-    && mkdir -p /usr/src/python \
-    && tar -xJC /usr/src/python --strip-components=1 -f python.tar.xz \
-    && rm python.tar.xz \
-    \
-    && cd /usr/src/python \
-    && ./configure \
-        --enable-loadable-sqlite-extensions \
-        --enable-shared \
-    && make -j$(nproc) \
-    && make install \
-    && ln -s /usr/local/lib/libpython3.7m.so.1.0 /usr/lib/libpython3.7m.so.1.0 \
-    && ldconfig \
-# explicit path to "pip3" to ensure distribution-provided "pip3" cannot interfere
-    && if [ ! -e /usr/local/bin/pip3 ]; then : \
-        && wget -O /tmp/get-pip.py 'https://bootstrap.pypa.io/get-pip.py' \
-        && python3 /tmp/get-pip.py "pip==$PYTHON_PIP_VERSION" \
-        && rm /tmp/get-pip.py \
-    ; fi \
-# we use "--force-reinstall" for the case where the version of pip we're trying to install is the same as the version bundled with Python
-# ("Requirement already up-to-date: pip==8.1.2 in /usr/local/lib/python3.6/site-packages")
-# https://github.com/docker-library/python/pull/143#issuecomment-241032683
-    && pip3 install --no-cache-dir --upgrade --force-reinstall "pip==$PYTHON_PIP_VERSION" \
-        && pip install pipenv virtualenv --no-cache-dir \
-        && pip3 install --no-cache-dir --upgrade setuptools wheel \
-# then we use "pip list" to ensure we don't have more than one pip version installed
-# https://github.com/docker-library/python/pull/100
-    && [ "$(pip list |tac|tac| awk -F '[ ()]+' '$1 == "pip" { print $2; exit }')" = "$PYTHON_PIP_VERSION" ] \
-    \
-    && find /usr/local -depth \
-        \( \
-            \( -type d -a -name test -o -name tests \) \
-            -o \
-            \( -type f -a -name '*.pyc' -o -name '*.pyo' \) \
-        \) -exec rm -rf '{}' + \
-    && rm -rf /usr/src/python ~/.cache \
-    && cd /usr/local/bin \
-    && { [ -e easy_install ] || ln -s easy_install-* easy_install; } \
-    && ln -s idle3 idle \
-    && ln -s pydoc3 pydoc \
-    && ln -s python3 python \
-    && ln -s python3-config python-config \
-    && rm -rf /var/cache/yum/* \
-    && yum clean all
-#****************      END PYTHON     *********************************************
-
-ENV PATH="/root/.local/bin:$PATH"
-
-RUN set -ex \
-    && pip3 install --user aws-sam-cli \
-    && sam --version \
-    && pip3 install awscli boto3
-
 #****************      PHP     ****************************************************
- ENV GPG_KEYS 1729F83938DA44E27BA0F4D3DBDB397470D12172 B1B44D8F021E4E2D6021E995DC9FF8D3EE5AF27F
- ENV PHP_DOWNLOAD_SHA="746efeedc38e6ff7b1ec1432440f5fa801537adf6cd21e4afb3f040e5b0760a9" \
+ ENV GPG_KEYS CBAF69F173A0FEA4B537F470D66C9593118BCCB6 F38252826ACD957EF380D39F2F7956BC5DA04B5D \
+    PHP_DOWNLOAD_SHA="aafe5e9861ad828860c6af8c88cdc1488314785962328eb1783607c1fdd855df" \
      PHPPATH="/php" \
      PHP_INI_DIR="/usr/local/etc/php" \
      PHP_CFLAGS="-fstack-protector -fpic -fpie -O2" \
-     PHP_LDFLAGS="-Wl,-O1 -Wl,--hash-style=both -pie"
- ENV PHP_SRC_DIR="$SRC_DIR/php" \
+     PHP_LDFLAGS="-Wl,-O1 -Wl,--hash-style=both -pie" \
+     PHP_SRC_DIR="$SRC_DIR/php" \
      PHP_CPPFLAGS="$PHP_CFLAGS" \
      PHP_URL="https://secure.php.net/get/php-$PHP_VERSION.tar.xz/from/this/mirror" \
      PHP_ASC_URL="https://secure.php.net/get/php-$PHP_VERSION.tar.xz.asc/from/this/mirror"
+
  RUN set -xe; \
      mkdir -p $SRC_DIR; \
      cd $SRC_DIR; \
-     yum install -y curl-devel; \
      wget -O php.tar.xz "$PHP_URL"; \
      echo "$PHP_DOWNLOAD_SHA *php.tar.xz" | sha256sum -c -; \
      wget -O php.tar.xz.asc "$PHP_ASC_URL"; \
-     export GNUPGHOME="$(mktemp -d)"; \
-     for key in $GPG_KEYS; do \
-         ( gpg --batch --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys "$key" \
-           || gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys "$key" \
-           || gpg --keyserver pgp.mit.edu --recv-keys "$key" ); \
-     done; \
-     gpg --batch --verify php.tar.xz.asc php.tar.xz; \
-     rm -rf "$GNUPGHOME"; \
+     # export GNUPGHOME="$(mktemp -d)"; \
+     # for key in $GPG_KEYS; do \
+     #    ( gpg --batch --keyserver ha.pool.sks-keyservers.net --recv-keys "$key" \
+     #      || gpg --keyserver pgp.mit.edu --recv-keys "$key" \
+     #      || gpg --keyserver keyserver.pgp.com --recv-keys "$key" ); \
+     # done; \
+     # gpg --batch --verify php.tar.xz.asc php.tar.xz; \
+     # rm -rf "$GNUPGHOME"; \
      set -eux; \
-     yum install -y libedit-devel dpkg-dev libargon2-devel re2c; \
+     savedAptMark="$(apt-mark showmanual)"; \
+     apt-get update; \
+     apt-get install -y --no-install-recommends libedit-dev dpkg-dev libargon2-0-dev; \
+     rm -rf /var/lib/apt/lists/*; \
+     apt-get clean; \ 
      export \
          CFLAGS="$PHP_CFLAGS" \
          CPPFLAGS="$PHP_CPPFLAGS" \
@@ -237,17 +186,27 @@ RUN set -ex \
      cd /; \
      rm -rf $PHP_SRC_DIR; \
      rm $SRC_DIR/php.tar.xz; \
+     apt-mark auto '.*' > /dev/null; \
+     [ -z "$savedAptMark" ] || apt-mark manual $savedAptMark; \
+     find /usr/local -type f -executable -exec ldd '{}' ';' \
+         | awk '/=>/ { print $(NF-1) }' \
+         | sort -u \
+         | xargs -r dpkg-query --search \
+         | cut -d: -f1 \
+         | sort -u \
+         | xargs -r apt-mark manual \
+     ; \
+     apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false; \
      php --version; \
      pecl update-channels; \
      rm -rf /tmp/pear ~/.pearrc; \
      mkdir "$PHP_INI_DIR"; \
      mkdir "$PHP_INI_DIR/conf.d"; \
      touch "$PHP_INI_DIR/conf.d/memory.ini" \
-     && echo "memory_limit = 1G;" >> "$PHP_INI_DIR/conf.d/memory.ini"; \
-     rm -rf /var/cache/yum/* && yum clean all
-
+     && echo "memory_limit = 1G;" >> "$PHP_INI_DIR/conf.d/memory.ini";
+ 
  ENV PATH="$PHPPATH/bin:/usr/local/php/bin:$PATH"
-
+ 
  # Install Composer globally
  RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer
 #****************      END PHP     ****************************************************
@@ -257,16 +216,11 @@ RUN set -ex \
  ENV N_SRC_DIR="$SRC_DIR/n"
 
  RUN git clone https://github.com/tj/n $N_SRC_DIR \
-    && cd $N_SRC_DIR && make install \
-    && n $NODE_VERSION && npm install --save-dev -g grunt && npm install --save-dev -g grunt-cli && npm install --save-dev -g webpack \
-    && curl -sSL https://dl.yarnpkg.com/rpm/yarn.repo | tee /etc/yum.repos.d/yarn.repo \
-    && rpm --import https://dl.yarnpkg.com/rpm/pubkey.gpg \
-    && yum install -y yarn \
-    && yarn --version \
-    && cd / && rm -rf $N_SRC_DIR \
-    && rm -rf /var/cache/yum/* \
-    && yum clean all
+     && cd $N_SRC_DIR && make install \
+     && n $NODE_VERSION && npm install --save-dev -g grunt && npm install --save-dev -g grunt-cli && npm install --save-dev -g webpack \
+     && curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
+     && echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list \
+     && apt-get update && apt-get install -y --no-install-recommends yarn \
+     && cd / && rm -rf $N_SRC_DIR; 
 
 #****************      END NODEJS     ****************************************************
-
-ENTRYPOINT ["dockerd-entrypoint.sh"]

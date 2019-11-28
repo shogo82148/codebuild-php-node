@@ -11,18 +11,18 @@
 
 FROM amazonlinux:2
 
-ENV PYTHON_VERSION="3.7.3" \
- PHP_VERSION="7.2.25" \
- NODE_VERSION="12.13.1" \
+ENV PYTHON_VERSION="3.8.0" \
+ PHP_VERSION="7.3.12" \
+ NODE_VERSION="10.17.0" \
  JQ_VERSION="1.6" \
  JQ_SHA256="af986793a515d500ab2d35f8d2aecd656e764504b789b66d7e1a0b727a124c44" \
- DOCKER_VERSION="18.09.6" \
+ DOCKER_VERSION="19.03.1" \
  DOCKER_COMPOSE_VERSION="1.24.0"
 
 #****************        Utilities     ********************************************* 
 ENV DOCKER_BUCKET="download.docker.com" \    
     DOCKER_CHANNEL="stable" \
-    DOCKER_SHA256="1f3f6774117765279fce64ee7f76abbb5f260264548cf80631d68fb2d795bb09" \
+    DOCKER_SHA256="6e7d8e24ee46b13d7547d751696d01607d19c8224c1b2c867acc8c779e77734b" \
     DIND_COMMIT="3b5fac462d21ca164b3778647420016315289034" \    
     GITVERSION_VERSION="4.0.0" \
     DEBIAN_FRONTEND="noninteractive" \
@@ -98,7 +98,7 @@ COPY dockerd-entrypoint.sh /usr/local/bin/
 
 #****************        PYTHON     *********************************************
 ENV PATH="/usr/local/bin:$PATH" \
-    GPG_KEY="0D96DF4D4110E5C43FBFB17F2D347EA6AA65421D" \
+    GPG_KEY="E3FF2839C048B25C084DEBE9B26995E310250568" \
     PYTHON_PIP_VERSION="19.1.1" \
     LC_ALL=C.UTF-8 \
     LANG=C.UTF-8
@@ -122,7 +122,7 @@ RUN yum install -y tcl-devel tk-devel bzip2-devel gdbm-devel libuuid-devel \
         --enable-shared \
     && make -j$(nproc) \
     && make install \
-    && ln -s /usr/local/lib/libpython3.7m.so.1.0 /usr/lib/libpython3.7m.so.1.0 \
+    && ln -s /usr/local/lib/libpython3.8.so.1.0 /usr/lib/libpython3.8.so.1.0 \
     && ldconfig \
 # explicit path to "pip3" to ensure distribution-provided "pip3" cannot interfere
     && if [ ! -e /usr/local/bin/pip3 ]; then : \
@@ -165,8 +165,8 @@ RUN set -ex \
     && pip3 install awscli boto3
 
 #****************      PHP     ****************************************************
- ENV GPG_KEYS 1729F83938DA44E27BA0F4D3DBDB397470D12172 B1B44D8F021E4E2D6021E995DC9FF8D3EE5AF27F
- ENV PHP_DOWNLOAD_SHA="746efeedc38e6ff7b1ec1432440f5fa801537adf6cd21e4afb3f040e5b0760a9" \
+ ENV GPG_KEYS CBAF69F173A0FEA4B537F470D66C9593118BCCB6 F38252826ACD957EF380D39F2F7956BC5DA04B5D
+ ENV PHP_DOWNLOAD_SHA="aafe5e9861ad828860c6af8c88cdc1488314785962328eb1783607c1fdd855df" \
      PHPPATH="/php" \
      PHP_INI_DIR="/usr/local/etc/php" \
      PHP_CFLAGS="-fstack-protector -fpic -fpie -O2" \
