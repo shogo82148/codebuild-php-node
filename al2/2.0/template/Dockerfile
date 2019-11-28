@@ -165,7 +165,7 @@ RUN set -ex \
     && pip3 install awscli boto3
 
 #****************      PHP     ****************************************************
-ENV GPG_KEYS %%PHP_GPG_KEYS%% \
+ENV GPG_KEYS="%%PHP_GPG_KEYS%%" \
     PHP_DOWNLOAD_SHA="%%PHP_SHA256%%" \
     PHPPATH="/php" \
     PHP_INI_DIR="/usr/local/etc/php" \

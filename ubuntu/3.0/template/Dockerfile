@@ -110,8 +110,8 @@ COPY runtimes.yml /codebuild/image/config/runtimes.yml
 COPY dockerd-entrypoint.sh /usr/local/bin/
 
 #****************      PHP     ****************************************************
-ENV GPG_KEYS %%PHP_GPG_KEYS%%
-ENV PHP_DOWNLOAD_SHA="%%PHP_SHA256%%" \
+ENV GPG_KEYS="%%PHP_GPG_KEYS%%" \
+    PHP_DOWNLOAD_SHA="%%PHP_SHA256%%" \
     PHPPATH="/php" \
     PHP_INI_DIR="/usr/local/etc/php" \
     PHP_CFLAGS="-fstack-protector -fpic -fpie -O2" \
