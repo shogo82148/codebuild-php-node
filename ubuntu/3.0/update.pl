@@ -75,6 +75,11 @@ my $php = do {
     my $info = (grep { $_->{filename} =~ m([.]tar[.]xz$) } @{$json->{$latest}{source}})[0];
     $info->{version} = $latest;
     $info->{gpg} = join ' ', @{$php_gpg_keys->{"$major.$minor"}};
+
+    $info->{extra} = '';
+    if ($major == 7 && $minor >= 4) {
+        $info->{extra} = 'oniguruma oniguruma-devel libzip libzip-devel';
+    }
     $info;
 };
 
@@ -107,6 +112,7 @@ sub execute_template {
     $doc =~ s/%%PHP_VERSION%%/$php->{version}/g;
     $doc =~ s/%%PHP_SHA256%%/$php->{sha256}/g;
     $doc =~ s/%%PHP_GPG_KEYS%%/$php->{gpg}/g;
+    $doc =~ s/%%PHP_EXTRA_PACKAGES%%/$php->{extra}/g;
     $doc =~ s/%%NODE_MAJOR_VERSION%%/$node_version/g;
     $doc =~ s/%%NODE_VERSION%%/$node->{version}/g;
 
@@ -121,10 +127,10 @@ sub execute_template {
     chmod 0755, "$dir/$name" if -x "template/$name";
 }
 
-execute_template 'Dockerfile';
-execute_template 'ssh_config';
-execute_template 'dockerd-entrypoint.sh';
-execute_template 'runtimes.yml';
+execute_template('Dockerfile');
+execute_template('ssh_config');
+execute_template('dockerd-entrypoint.sh');
+execute_template('runtimes.yml');
 
 __END__
 

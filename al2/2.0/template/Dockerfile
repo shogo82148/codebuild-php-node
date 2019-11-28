@@ -191,7 +191,7 @@ RUN set -xe; \
     gpg --batch --verify php.tar.xz.asc php.tar.xz; \
     rm -rf "$GNUPGHOME"; \
     set -eux; \
-    yum install -y libedit-devel dpkg-dev libargon2-devel re2c; \
+    yum install -y libedit-devel dpkg-dev libargon2-devel re2c %%PHP_EXTRA_PACKAGES%%; \
     export \
         CFLAGS="$PHP_CFLAGS" \
         CPPFLAGS="$PHP_CPPFLAGS" \

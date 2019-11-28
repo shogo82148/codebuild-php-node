@@ -145,7 +145,7 @@ RUN set -xe; \
     set -eux; \
     savedAptMark="$(apt-mark showmanual)"; \
     apt-get update; \
-    apt-get install -y --no-install-recommends libedit-dev dpkg-dev libargon2-0-dev; \
+    apt-get install -y --no-install-recommends libedit-dev dpkg-dev libargon2-0-dev %%PHP_EXTRA_PACKAGES%%; \
     rm -rf /var/lib/apt/lists/*; \
     apt-get clean; \ 
     export \
