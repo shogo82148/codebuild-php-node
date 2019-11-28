@@ -24,7 +24,7 @@ jobs:
         - "12"
     steps:
     - uses: actions/checkout@v1
-    - run: echo "::set-env TAG=${{ secrets.username }}/codebuild-php-node:php${{ matrix.php }}-node${{ matrix.node }}-standard-3.0::yellow"
+    - run: echo "::set-env name=TAG::${{ secrets.username }}/codebuild-php-node:php${{ matrix.php }}-node${{ matrix.node }}-standard-3.0"
     - name: Build the Docker image
       run: |
         docker build . --tag "$TAG"
