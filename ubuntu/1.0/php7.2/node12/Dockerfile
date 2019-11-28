@@ -118,13 +118,13 @@ COPY ssh_config /root/.ssh/config
 COPY dockerd-entrypoint.sh /usr/local/bin/
 
 #****************      PHP     ****************************************************
-ENV GPG_KEYS 1729F83938DA44E27BA0F4D3DBDB397470D12172 B1B44D8F021E4E2D6021E995DC9FF8D3EE5AF27F
-ENV PHP_DOWNLOAD_SHA="746efeedc38e6ff7b1ec1432440f5fa801537adf6cd21e4afb3f040e5b0760a9" \
+ENV GPG_KEYS="1729F83938DA44E27BA0F4D3DBDB397470D12172 B1B44D8F021E4E2D6021E995DC9FF8D3EE5AF27F" \
+    PHP_DOWNLOAD_SHA="746efeedc38e6ff7b1ec1432440f5fa801537adf6cd21e4afb3f040e5b0760a9" \
     PHPPATH="/php" \
     PHP_INI_DIR="/usr/local/etc/php" \
     PHP_CFLAGS="-fstack-protector -fpic -fpie -O2" \
-    PHP_LDFLAGS="-Wl,-O1 -Wl,--hash-style=both -pie"
-ENV PHP_SRC_DIR="$SRC_DIR/php" \
+    PHP_LDFLAGS="-Wl,-O1 -Wl,--hash-style=both -pie" \
+    PHP_SRC_DIR="$SRC_DIR/php" \
     PHP_CPPFLAGS="$PHP_CFLAGS" \
     PHP_URL="https://secure.php.net/get/php-$PHP_VERSION.tar.xz/from/this/mirror" \
     PHP_ASC_URL="https://secure.php.net/get/php-$PHP_VERSION.tar.xz.asc/from/this/mirror"

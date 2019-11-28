@@ -118,13 +118,13 @@ COPY ssh_config /root/.ssh/config
 COPY dockerd-entrypoint.sh /usr/local/bin/
 
 #****************      PHP     ****************************************************
-ENV GPG_KEYS %%PHP_GPG_KEYS%%
-ENV PHP_DOWNLOAD_SHA="%%PHP_SHA256%%" \
+ENV GPG_KEYS="%%PHP_GPG_KEYS%%" \
+    PHP_DOWNLOAD_SHA="%%PHP_SHA256%%" \
     PHPPATH="/php" \
     PHP_INI_DIR="/usr/local/etc/php" \
     PHP_CFLAGS="-fstack-protector -fpic -fpie -O2" \
-    PHP_LDFLAGS="-Wl,-O1 -Wl,--hash-style=both -pie"
-ENV PHP_SRC_DIR="$SRC_DIR/php" \
+    PHP_LDFLAGS="-Wl,-O1 -Wl,--hash-style=both -pie" \
+    PHP_SRC_DIR="$SRC_DIR/php" \
     PHP_CPPFLAGS="$PHP_CFLAGS" \
     PHP_URL="https://secure.php.net/get/php-$PHP_VERSION.tar.xz/from/this/mirror" \
     PHP_ASC_URL="https://secure.php.net/get/php-$PHP_VERSION.tar.xz.asc/from/this/mirror"
