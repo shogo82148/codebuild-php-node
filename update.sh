@@ -13,7 +13,11 @@
     echo updating php7.3 node10 standard-1.0 >&2 && \
     ./update.pl 7.3 10 && \
     echo updating php7.3 node12 standard-1.0 >&2 && \
-    ./update.pl 7.3 12
+    ./update.pl 7.3 12 \
+    echo updating php7.4 node10 standard-2.0 >&2 && \
+    ./update.pl 7.4 10 && \
+    echo updating php7.4 node12 standard-2.0 >&2 && \
+    ./update.pl 7.4 12
 )
 
 (
@@ -29,7 +33,11 @@
     echo updating php7.3 node10 standard-2.0 >&2 && \
     ./update.pl 7.3 10 && \
     echo updating php7.3 node12 standard-2.0 >&2 && \
-    ./update.pl 7.3 12
+    ./update.pl 7.3 12 \
+    echo updating php7.4 node10 standard-2.0 >&2 && \
+    ./update.pl 7.4 10 && \
+    echo updating php7.4 node12 standard-2.0 >&2 && \
+    ./update.pl 7.4 12
 )
 
 (
@@ -45,7 +53,11 @@
     echo updating php7.3 node10 standard-2.0 >&2 && \
     ./update.pl 7.3 10 && \
     echo updating php7.3 node12 standard-2.0 >&2 && \
-    ./update.pl 7.3 12
+    ./update.pl 7.3 12 \
+    echo updating php7.4 node10 standard-2.0 >&2 && \
+    ./update.pl 7.4 10 && \
+    echo updating php7.4 node12 standard-2.0 >&2 && \
+    ./update.pl 7.4 12
 )
 
 (
@@ -61,7 +73,11 @@
     echo updating php7.3 node10 amazonlinux2-1.0 >&2 && \
     ./update.pl 7.3 10 && \
     echo updating php7.3 node12 amazonlinux2-1.0 >&2 && \
-    ./update.pl 7.3 12
+    ./update.pl 7.3 12 \
+    echo updating php7.4 node10 standard-2.0 >&2 && \
+    ./update.pl 7.4 10 && \
+    echo updating php7.4 node12 standard-2.0 >&2 && \
+    ./update.pl 7.4 12
 )
 
 (
@@ -77,5 +93,9 @@
     echo updating php7.3 node10 amazonlinux2-1.0 >&2 && \
     ./update.pl 7.3 10 && \
     echo updating php7.3 node12 amazonlinux2-1.0 >&2 && \
-    ./update.pl 7.3 12
+    ./update.pl 7.3 12 \
+    echo updating php7.4 node10 standard-2.0 >&2 && \
+    ./update.pl 7.4 10 && \
+    echo updating php7.4 node12 standard-2.0 >&2 && \
+    ./update.pl 7.4 12
 )

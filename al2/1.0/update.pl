@@ -30,6 +30,11 @@ RETRY:
 }
 
 my $php_gpg_keys = {
+    # https://wiki.php.net/todo/php74
+    # derick & petk
+    # https://secure.php.net/gpg-keys.php#gpg-7.4
+    "7.4" => ["5A52880781F755608BF815FC910DEB46F53EA312", "42670A7FE4D0441C8E4632349E4FDC074A4EF02D"],
+
     # https://wiki.php.net/todo/php73
     # cmb & stas
     # https://secure.php.net/gpg-keys.php#gpg-7.3
