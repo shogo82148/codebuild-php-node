@@ -18,12 +18,13 @@ jobs:
     strategy:
       matrix:
         php:
-        - "7.1"
-        - "7.2"
-        - "7.3"
+          - "7.1"
+          - "7.2"
+          - "7.3"
+          - "7.4"
         node:
-        - "10"
-        - "12"
+          - "10"
+          - "12"
     steps:
       - uses: actions/checkout@v1
       - run: echo "::set-env name=TAG::${{ secrets.username }}/codebuild-php-node:php${{ matrix.php }}-node${{ matrix.node }}-standard-2.0"
