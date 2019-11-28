@@ -1,10 +1,10 @@
-name: amazonlinux2-1.0
+name: amazonlinux2-2.0
 
 on:
   push:
     paths:
     - al2/2.0/*/*/*
-    - .github/workflows/amazonlinux-1.0.yml
+    - .github/workflows/amazonlinux-2.0.yml
   pull_request:
     paths:
     - al2/2.0/*/*/*
