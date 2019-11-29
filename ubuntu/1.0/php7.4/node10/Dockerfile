@@ -1,4 +1,5 @@
-# Copyright 2017-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+# Copyright 2017-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+# Copyright 2019 Shogo Ichinose. All Rights Reserved.
 #
 # Licensed under the Amazon Software License (the "License"). You may not use this file except in compliance with the License.
 # A copy of the License is located at
@@ -11,19 +12,21 @@
 
 FROM ubuntu:18.04
 
-ENV PHP_VERSION="%%PHP_VERSION%%" \
- NODE_VERSION="%%NODE_VERSION%%" \
- JQ_VERSION="1.6" \
- JQ_SHA256="af986793a515d500ab2d35f8d2aecd656e764504b789b66d7e1a0b727a124c44" \
- DOCKER_VERSION="18.09.6" \
- DOCKER_COMPOSE_VERSION="1.24.0"
+ENV PHP_VERSION="7.4.0" \
+ NODE_VERSION="10.17.0" \
+ NVM_VERSION="0.33.5" \
+ DOCKER_VERSION="18.09.1" \
+ DOCKER_COMPOSE_VERSION="1.23.2"
+
 
 #****************        Utilities     ********************************************* 
-ENV DOCKER_BUCKET="download.docker.com" \    
+ENV DOCKER_BUCKET="download.docker.com" \
     DOCKER_CHANNEL="stable" \
-    DOCKER_SHA256="1f3f6774117765279fce64ee7f76abbb5f260264548cf80631d68fb2d795bb09" \
-    DIND_COMMIT="3b5fac462d21ca164b3778647420016315289034" \    
+    DOCKER_SHA256="c9959e42b637fb7362899ac1d1aeef2a966fa0ea85631da91f4c4a7a9ec29644" \
+    DIND_COMMIT="3b5fac462d21ca164b3778647420016315289034" \
     GITVERSION_VERSION="4.0.0" \
+    JQ_VERSION="1.6" \
+    JQ_SHA256="af986793a515d500ab2d35f8d2aecd656e764504b789b66d7e1a0b727a124c44" \
     DEBIAN_FRONTEND="noninteractive" \
     SRC_DIR="/usr/src"
 
@@ -34,7 +37,7 @@ RUN set -ex \
     && apt install -y apt-transport-https \
     && apt-get update \
     && apt-get install software-properties-common -y --no-install-recommends \
-    && apt-add-repository -y ppa:git-core/ppa \
+    && apt-add-repository ppa:git-core/ppa \
     && apt-get update \
     && apt-get install git=1:2.* -y --no-install-recommends \
     && git version \
@@ -64,14 +67,22 @@ RUN set -ex \
        libio-pty-perl libserf-1-1 libsvn-perl libsvn1 libtcl8.6 libtimedate-perl \
        libxml2-utils libyaml-perl python-bzrlib python-configobj \
        sgml-base sgml-data subversion tcl tcl8.6 xml-core xmlto xsltproc \
-       tk gettext gettext-base libapr1 libaprutil1 xvfb expect parallel \
-       locales rsync \
+       tk gettext gettext-base libapr1 libaprutil1 xvfb expect \
+    && apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF \
     && rm -rf /var/lib/apt/lists/* \
     && apt-get clean \
     && wget https://github.com/stedolan/jq/releases/download/jq-${JQ_VERSION}/jq-linux64 -O /usr/local/bin/jq \
     && echo "$JQ_SHA256 /usr/local/bin/jq" | sha256sum -c - \
     && chmod +x /usr/local/bin/jq
 
+# Download and set up GitVersion
+RUN set -ex \
+    && wget "https://github.com/GitTools/GitVersion/releases/download/v${GITVERSION_VERSION}/GitVersion-bin-net40-v${GITVERSION_VERSION}.zip" -O /tmp/GitVersion_${GITVERSION_VERSION}.zip \
+    && mkdir -p /usr/local/GitVersion_${GITVERSION_VERSION} \
+    && unzip /tmp/GitVersion_${GITVERSION_VERSION}.zip -d /usr/local/GitVersion_${GITVERSION_VERSION} \
+    && rm /tmp/GitVersion_${GITVERSION_VERSION}.zip \
+    && echo "mono /usr/local/GitVersion_${GITVERSION_VERSION}/GitVersion.exe \$@" >> /usr/local/bin/gitversion \
+    && chmod +x /usr/local/bin/gitversion
 # Install Docker
 RUN set -ex \
     && curl -fSL "https://${DOCKER_BUCKET}/linux/static/${DOCKER_CHANNEL}/x86_64/docker-${DOCKER_VERSION}.tgz" -o docker.tgz \
@@ -92,26 +103,23 @@ RUN set -ex \
 
 # https://docs.aws.amazon.com/eks/latest/userguide/install-aws-iam-authenticator.html https://docs.aws.amazon.com/AmazonECS/latest/developerguide/ECS_CLI_installation.html
 RUN curl -sS -o /usr/local/bin/aws-iam-authenticator https://amazon-eks.s3-us-west-2.amazonaws.com/1.11.5/2018-12-06/bin/linux/amd64/aws-iam-authenticator \
-    && curl -sS -o /usr/local/bin/kubectl https://amazon-eks.s3-us-west-2.amazonaws.com/1.11.5/2018-12-06/bin/linux/amd64/kubectl \
-    && curl -sS -o /usr/local/bin/ecs-cli https://s3.amazonaws.com/amazon-ecs-cli/ecs-cli-linux-amd64-latest \
-    && chmod +x /usr/local/bin/kubectl /usr/local/bin/aws-iam-authenticator /usr/local/bin/ecs-cli
+ && curl -sS -o /usr/local/bin/kubectl https://amazon-eks.s3-us-west-2.amazonaws.com/1.11.5/2018-12-06/bin/linux/amd64/kubectl \
+ && curl -sS -o /usr/local/bin/ecs-cli https://s3.amazonaws.com/amazon-ecs-cli/ecs-cli-linux-amd64-latest \
+ && chmod +x /usr/local/bin/kubectl /usr/local/bin/aws-iam-authenticator /usr/local/bin/ecs-cli
 
 RUN set -ex \
-    && pip3 install --upgrade setuptools wheel \
-    && pip3 install awscli boto3  
+&& pip3 install awscli boto3  
 
 VOLUME /var/lib/docker
 
 # Configure SSH
 COPY ssh_config /root/.ssh/config
 
-COPY runtimes.yml /codebuild/image/config/runtimes.yml
-
 COPY dockerd-entrypoint.sh /usr/local/bin/
 
 #****************      PHP     ****************************************************
-ENV GPG_KEYS="%%PHP_GPG_KEYS%%" \
-    PHP_DOWNLOAD_SHA="%%PHP_SHA256%%" \
+ENV GPG_KEYS="5A52880781F755608BF815FC910DEB46F53EA312 42670A7FE4D0441C8E4632349E4FDC074A4EF02D" \
+    PHP_DOWNLOAD_SHA="9bb751b20e5d6cc1ea9b1ebf23ef2d5f07f99b2d9cc417bf1d70c04f8b20ec42" \
     PHPPATH="/php" \
     PHP_INI_DIR="/usr/local/etc/php" \
     PHP_CFLAGS="-fstack-protector -fpic -fpie -O2" \
@@ -128,9 +136,9 @@ RUN set -xe; \
     wget -O php.tar.xz.asc "$PHP_ASC_URL"; \
     # export GNUPGHOME="$(mktemp -d)"; \
     # for key in $GPG_KEYS; do \
-    #    ( gpg --batch --keyserver ha.pool.sks-keyservers.net --recv-keys "$key" \
-    #      || gpg --keyserver pgp.mit.edu --recv-keys "$key" \
-    #      || gpg --keyserver keyserver.pgp.com --recv-keys "$key" ); \
+    #     ( gpg --batch --keyserver ha.pool.sks-keyservers.net --recv-keys "$key" \
+    #     || gpg --keyserver pgp.mit.edu --recv-keys "$key" \
+    #     || gpg --keyserver keyserver.pgp.com --recv-keys "$key" ); \
     # done; \
     # gpg --batch --verify php.tar.xz.asc php.tar.xz; \
     # rm -rf "$GNUPGHOME"; \
@@ -201,23 +209,25 @@ RUN set -xe; \
     mkdir "$PHP_INI_DIR/conf.d"; \
     touch "$PHP_INI_DIR/conf.d/memory.ini" \
     && echo "memory_limit = 1G;" >> "$PHP_INI_DIR/conf.d/memory.ini";
- 
+
 ENV PATH="$PHPPATH/bin:/usr/local/php/bin:$PATH"
- 
+
 # Install Composer globally
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer
 #****************      END PHP     ****************************************************
-
+ 
 #****************      NODEJS     ****************************************************
 
-ENV N_SRC_DIR="$SRC_DIR/n"
+ ENV N_SRC_DIR="$SRC_DIR/n"
 
-RUN git clone https://github.com/tj/n $N_SRC_DIR \
-    && cd $N_SRC_DIR && make install \
-    && n $NODE_VERSION && npm install --save-dev -g grunt && npm install --save-dev -g grunt-cli && npm install --save-dev -g webpack \
-    && curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
-    && echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list \
-    && apt-get update && apt-get install -y --no-install-recommends yarn \
-    && cd / && rm -rf $N_SRC_DIR; 
+ RUN git clone https://github.com/tj/n $N_SRC_DIR \
+     && cd $N_SRC_DIR && make install \
+     && n $NODE_VERSION && npm install --save-dev -g grunt && npm install --save-dev -g grunt-cli && npm install --save-dev -g webpack \
+     && curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
+     && echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list \
+     && apt-get update && apt-get install -y --no-install-recommends yarn \
+     && cd / && rm -rf $N_SRC_DIR; 
 
 #****************      END NODEJS     ****************************************************
+
+WORKDIR $PHPPATH
