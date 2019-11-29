@@ -191,7 +191,7 @@ RUN set -xe; \
     gpg --batch --verify php.tar.xz.asc php.tar.xz; \
     rm -rf "$GNUPGHOME"; \
     set -eux; \
-    yum install -y libedit-devel dpkg-dev libargon2-devel re2c oniguruma oniguruma-devel libzip libzip-devel; \
+    yum install -y libedit-devel dpkg-dev libargon2-devel re2c; \
     export \
         CFLAGS="$PHP_CFLAGS" \
         CPPFLAGS="$PHP_CPPFLAGS" \

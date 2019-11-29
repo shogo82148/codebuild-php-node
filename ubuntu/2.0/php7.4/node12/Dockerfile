@@ -137,7 +137,7 @@ RUN set -xe; \
     set -eux; \
     savedAptMark="$(apt-mark showmanual)"; \
     apt-get update; \
-    apt-get install -y --no-install-recommends libedit-dev dpkg-dev libargon2-0-dev oniguruma oniguruma-devel libzip libzip-devel; \
+    apt-get install -y --no-install-recommends libedit-dev dpkg-dev libargon2-0-dev; \
     rm -rf /var/lib/apt/lists/*; \
     apt-get clean; \ 
     export \
