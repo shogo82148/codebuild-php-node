@@ -11,17 +11,17 @@
 
 FROM ubuntu:18.04
 
-ENV PHP_VERSION="7.4.0" \
- NODE_VERSION="10.17.0" \
+ENV PHP_VERSION="%%PHP_VERSION%%" \
+ NODE_VERSION="%%NODE_VERSION%%" \
  JQ_VERSION="1.6" \
  JQ_SHA256="af986793a515d500ab2d35f8d2aecd656e764504b789b66d7e1a0b727a124c44" \
- DOCKER_VERSION="19.03.1" \
+ DOCKER_VERSION="18.09.6" \
  DOCKER_COMPOSE_VERSION="1.24.0"
 
 #****************        Utilities     ********************************************* 
 ENV DOCKER_BUCKET="download.docker.com" \    
     DOCKER_CHANNEL="stable" \
-    DOCKER_SHA256="6e7d8e24ee46b13d7547d751696d01607d19c8224c1b2c867acc8c779e77734b" \
+    DOCKER_SHA256="1f3f6774117765279fce64ee7f76abbb5f260264548cf80631d68fb2d795bb09" \
     DIND_COMMIT="3b5fac462d21ca164b3778647420016315289034" \    
     GITVERSION_VERSION="4.0.0" \
     DEBIAN_FRONTEND="noninteractive" \
@@ -110,8 +110,8 @@ COPY runtimes.yml /codebuild/image/config/runtimes.yml
 COPY dockerd-entrypoint.sh /usr/local/bin/
 
 #****************      PHP     ****************************************************
-ENV GPG_KEYS="5A52880781F755608BF815FC910DEB46F53EA312 42670A7FE4D0441C8E4632349E4FDC074A4EF02D" \
-    PHP_DOWNLOAD_SHA="9bb751b20e5d6cc1ea9b1ebf23ef2d5f07f99b2d9cc417bf1d70c04f8b20ec42" \
+ENV GPG_KEYS="%%PHP_GPG_KEYS%%" \
+    PHP_DOWNLOAD_SHA="%%PHP_SHA256%%" \
     PHPPATH="/php" \
     PHP_INI_DIR="/usr/local/etc/php" \
     PHP_CFLAGS="-fstack-protector -fpic -fpie -O2" \
@@ -120,7 +120,6 @@ ENV GPG_KEYS="5A52880781F755608BF815FC910DEB46F53EA312 42670A7FE4D0441C8E4632349
     PHP_CPPFLAGS="$PHP_CFLAGS" \
     PHP_URL="https://secure.php.net/get/php-$PHP_VERSION.tar.xz/from/this/mirror" \
     PHP_ASC_URL="https://secure.php.net/get/php-$PHP_VERSION.tar.xz.asc/from/this/mirror"
-
 RUN set -xe; \
     mkdir -p $SRC_DIR; \
     cd $SRC_DIR; \
@@ -138,7 +137,7 @@ RUN set -xe; \
     set -eux; \
     savedAptMark="$(apt-mark showmanual)"; \
     apt-get update; \
-    apt-get install -y --no-install-recommends libedit-dev dpkg-dev libargon2-0-dev libonig libonig-dev libzip libzip-dev; \
+    apt-get install -y --no-install-recommends libedit-dev dpkg-dev libargon2-0-dev; \
     rm -rf /var/lib/apt/lists/*; \
     apt-get clean; \ 
     export \
@@ -198,13 +197,15 @@ RUN set -xe; \
     ; \
     apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false; \
     php --version; \
+    pecl update-channels; \
+    rm -rf /tmp/pear ~/.pearrc; \
     mkdir "$PHP_INI_DIR"; \
     mkdir "$PHP_INI_DIR/conf.d"; \
     touch "$PHP_INI_DIR/conf.d/memory.ini" \
     && echo "memory_limit = 1G;" >> "$PHP_INI_DIR/conf.d/memory.ini";
-
+ 
 ENV PATH="$PHPPATH/bin:/usr/local/php/bin:$PATH"
-
+ 
 # Install Composer globally
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer
 #****************      END PHP     ****************************************************

@@ -137,7 +137,7 @@ RUN set -xe; \
     set -eux; \
     savedAptMark="$(apt-mark showmanual)"; \
     apt-get update; \
-    apt-get install -y --no-install-recommends libedit-dev dpkg-dev libargon2-0-dev; \
+    apt-get install -y --no-install-recommends libedit-dev dpkg-dev libargon2-0-dev libonig libonig-dev libzip libzip-dev; \
     rm -rf /var/lib/apt/lists/*; \
     apt-get clean; \ 
     export \
@@ -197,8 +197,6 @@ RUN set -xe; \
     ; \
     apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false; \
     php --version; \
-    pecl update-channels; \
-    rm -rf /tmp/pear ~/.pearrc; \
     mkdir "$PHP_INI_DIR"; \
     mkdir "$PHP_INI_DIR/conf.d"; \
     touch "$PHP_INI_DIR/conf.d/memory.ini" \

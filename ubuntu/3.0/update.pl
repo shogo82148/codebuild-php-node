@@ -4,6 +4,7 @@ use utf8;
 use strict;
 use warnings;
 use JSON qw(decode_json encode_json);
+use version 0.77;
 
 sub curl {
     my $url = shift;
@@ -64,12 +65,7 @@ my $php = do {
     my ($major, $minor) = split /[.]/, $php_version;
     my $json = decode_json(curl("https://secure.php.net/releases/index.php?json&max=100&version=$major"));
     my @versions = (sort {
-        my @a = split /[.]/, $a;
-        my @b = split /[.]/, $b;
-        return $a[0] <=> $b[0] if $a[0] != $b[0];
-        return $a[1] <=> $b[1] if $a[1] != $b[1];
-        return $a[2] <=> $b[2] if $a[2] != $b[2];
-        return $a[3] cmp $b[3];
+        version->parse("v$a") <=> version->parse($b);
     } grep { $_ =~ m(^$php_version[.]) } keys %$json);
     my $latest = pop @versions;
     my $info = (grep { $_->{filename} =~ m([.]tar[.]xz$) } @{$json->{$latest}{source}})[0];
@@ -85,11 +81,7 @@ my $node = do {
         $_ =~ m(<a\s+href="v($node_version[.][^/"]+)/?") ? $1 : ()
     } @lines;
     my @versions = sort {
-        my @a = split /[.]/, $a;
-        my @b = split /[.]/, $b;
-        return $a[0] <=> $b[0] if $a[0] != $b[0];
-        return $a[1] <=> $b[1] if $a[1] != $b[1];
-        return $a[2] <=> $b[2];
+        version->parse("v$a") <=> version->parse($b);
     } @lines;
     my $latest = pop @versions;
     +{
@@ -121,7 +113,13 @@ sub execute_template {
     chmod 0755, "$dir/$name" if -x "template/$name";
 }
 
-execute_template 'Dockerfile';
+if (version->parse("v$php_version") < version->parse("v7.4.0")) {
+    execute_template 'Dockerfile-7.3';
+    system("mv", "php$php_version/node$node_version/Dockerfile-7.3", "php$php_version/node$node_version/Dockerfile")
+} else {
+    execute_template 'Dockerfile';
+}
+
 execute_template 'ssh_config';
 execute_template 'dockerd-entrypoint.sh';
 execute_template 'runtimes.yml';

@@ -191,7 +191,7 @@ RUN set -xe; \
     gpg --batch --verify php.tar.xz.asc php.tar.xz; \
     rm -rf "$GNUPGHOME"; \
     set -eux; \
-    yum install -y libedit-devel dpkg-dev libargon2-devel re2c; \
+    yum install -y libedit-devel dpkg-dev libargon2-devel re2c oniguruma oniguruma-devel libzip libzip-devel; \
     export \
         CFLAGS="$PHP_CFLAGS" \
         CPPFLAGS="$PHP_CPPFLAGS" \
@@ -238,8 +238,6 @@ RUN set -xe; \
     rm -rf $PHP_SRC_DIR; \
     rm $SRC_DIR/php.tar.xz; \
     php --version; \
-    pecl update-channels; \
-    rm -rf /tmp/pear ~/.pearrc; \
     mkdir "$PHP_INI_DIR"; \
     mkdir "$PHP_INI_DIR/conf.d"; \
     touch "$PHP_INI_DIR/conf.d/memory.ini" \
