@@ -138,7 +138,7 @@ RUN set -xe; \
     set -eux; \
     savedAptMark="$(apt-mark showmanual)"; \
     apt-get update; \
-    apt-get install -y --no-install-recommends libedit-dev dpkg-dev libargon2-0-dev libonig libonig-dev libzip libzip-dev; \
+    apt-get install -y --no-install-recommends libedit-dev dpkg-dev libargon2-0-dev libonig-dev libzip-dev; \
     rm -rf /var/lib/apt/lists/*; \
     apt-get clean; \ 
     export \
