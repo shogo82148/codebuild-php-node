@@ -18,7 +18,7 @@
     ./update.pl 7.4 10 && \
     echo updating php7.4 node12 standard-2.0 >&2 && \
     ./update.pl 7.4 12
-)
+) || exit 1
 
 (
     cd ubuntu/2.0 && \
@@ -38,7 +38,7 @@
     ./update.pl 7.4 10 && \
     echo updating php7.4 node12 standard-2.0 >&2 && \
     ./update.pl 7.4 12
-)
+) || exit 1
 
 (
     cd ubuntu/3.0 && \
@@ -58,7 +58,7 @@
     ./update.pl 7.4 10 && \
     echo updating php7.4 node12 standard-2.0 >&2 && \
     ./update.pl 7.4 12
-)
+) || exit 1
 
 (
     cd al2/1.0 && \
@@ -98,4 +98,4 @@
     ./update.pl 7.4 10 && \
     echo updating php7.4 node12 standard-2.0 >&2 && \
     ./update.pl 7.4 12
-)
+) || exit 1

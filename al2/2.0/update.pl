@@ -91,7 +91,7 @@ my $node = do {
 
 sub execute_template {
     my ($name) = @_;
-    open my $fh, '<', "template/$name" or die $!;
+    open my $fh, '<', "template/$name" or die "fail to open template/$name: $!";
     my $doc = do { local $/ = undef; <$fh>; };
     close $fh;
 
