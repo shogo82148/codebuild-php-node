@@ -12,7 +12,7 @@
 FROM amazonlinux:2
 
 ENV PYTHON_VERSION="3.7.3" \
- PHP_VERSION="7.3.12" \
+ PHP_VERSION="7.3.13" \
  NODE_VERSION="10.18.0" \
  JQ_VERSION="1.6" \
  JQ_SHA256="af986793a515d500ab2d35f8d2aecd656e764504b789b66d7e1a0b727a124c44" \
@@ -84,7 +84,7 @@ RUN set -ex \
 # https://docs.aws.amazon.com/eks/latest/userguide/install-aws-iam-authenticator.html https://docs.aws.amazon.com/AmazonECS/latest/developerguide/ECS_CLI_installation.html
 RUN curl -sS -o /usr/local/bin/aws-iam-authenticator https://amazon-eks.s3-us-west-2.amazonaws.com/1.11.5/2018-12-06/bin/linux/amd64/aws-iam-authenticator \
  && curl -sS -o /usr/local/bin/kubectl https://amazon-eks.s3-us-west-2.amazonaws.com/1.11.5/2018-12-06/bin/linux/amd64/kubectl \
- && curl -sS -o /usr/local/bin/ecs-cli https://s3.amazonaws.com/amazon-ecs-cli/ecs-cli-linux-amd64-latest \
+ && curl -sS -o /usr/local/bin/ecs-cli https://ecs-cli-linux-amd64-latest.s3.amazonaws.com/amazon-ecs-cli \
  && chmod +x /usr/local/bin/kubectl /usr/local/bin/aws-iam-authenticator /usr/local/bin/ecs-cli
 
 VOLUME /var/lib/docker
@@ -166,7 +166,7 @@ RUN set -ex \
 
 #****************      PHP     ****************************************************
 ENV GPG_KEYS="CBAF69F173A0FEA4B537F470D66C9593118BCCB6 F38252826ACD957EF380D39F2F7956BC5DA04B5D" \
-    PHP_DOWNLOAD_SHA="aafe5e9861ad828860c6af8c88cdc1488314785962328eb1783607c1fdd855df" \
+    PHP_DOWNLOAD_SHA="57ac55fe442d2da650abeb9e6fa161bd3a98ba6528c029f076f8bba43dd5c228" \
     PHPPATH="/php" \
     PHP_INI_DIR="/usr/local/etc/php" \
     PHP_CFLAGS="-fstack-protector -fpic -fpie -O2" \
@@ -258,7 +258,7 @@ ENV N_SRC_DIR="$SRC_DIR/n"
 
 RUN git clone https://github.com/tj/n $N_SRC_DIR \
     && cd $N_SRC_DIR && make install \
-    && n $NODE_VERSION && npm install --save-dev -g grunt && npm install --save-dev -g grunt-cli && npm install --save-dev -g webpack \
+    && n $NODE_VERSION && npm install --save-dev -g --no-bin-links grunt && npm install --save-dev -g grunt-cli && npm install --save-dev -g webpack \
     && curl -sSL https://dl.yarnpkg.com/rpm/yarn.repo | tee /etc/yum.repos.d/yarn.repo \
     && rpm --import https://dl.yarnpkg.com/rpm/pubkey.gpg \
     && yum install -y yarn \
