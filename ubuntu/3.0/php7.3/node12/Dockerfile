@@ -118,8 +118,8 @@ ENV GPG_KEYS="CBAF69F173A0FEA4B537F470D66C9593118BCCB6 F38252826ACD957EF380D39F2
     PHP_LDFLAGS="-Wl,-O1 -Wl,--hash-style=both -pie" \
     PHP_SRC_DIR="$SRC_DIR/php" \
     PHP_CPPFLAGS="$PHP_CFLAGS" \
-    PHP_URL="https://secure.php.net/get/php-$PHP_VERSION.tar.xz/from/this/mirror" \
-    PHP_ASC_URL="https://secure.php.net/get/php-$PHP_VERSION.tar.xz.asc/from/this/mirror"
+    PHP_URL="https://php.shogo82148.com/distributions/php-$PHP_VERSION.tar.xz" \
+    PHP_ASC_URL="https://php.shogo82148.com/distributions/php-$PHP_VERSION.tar.xz.asc"
 
 RUN set -xe; \
     mkdir -p $SRC_DIR; \
