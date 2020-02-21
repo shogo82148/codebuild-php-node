@@ -12,7 +12,7 @@
 
 FROM ubuntu:18.04
 
-ENV PHP_VERSION="7.4.2" \
+ENV PHP_VERSION="7.4.3" \
  NODE_VERSION="12.16.1" \
  NVM_VERSION="0.33.5" \
  DOCKER_VERSION="18.09.1" \
@@ -119,7 +119,7 @@ COPY dockerd-entrypoint.sh /usr/local/bin/
 
 #****************      PHP     ****************************************************
 ENV GPG_KEYS="5A52880781F755608BF815FC910DEB46F53EA312 42670A7FE4D0441C8E4632349E4FDC074A4EF02D" \
-    PHP_DOWNLOAD_SHA="98284deac017da0d426117ecae7599a1f1bf62ae3911e8bc16c4403a8f4bdf13" \
+    PHP_DOWNLOAD_SHA="cf1f856d877c268124ded1ede40c9fb6142b125fdaafdc54f855120b8bc6982a" \
     PHPPATH="/php" \
     PHP_INI_DIR="/usr/local/etc/php" \
     PHP_CFLAGS="-fstack-protector -fpic -fpie -O2" \
