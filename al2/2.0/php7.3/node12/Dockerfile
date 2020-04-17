@@ -12,7 +12,7 @@
 FROM amazonlinux:2
 
 ENV PYTHON_VERSION="3.8.0" \
- PHP_VERSION="7.3.16" \
+ PHP_VERSION="7.3.17" \
  NODE_VERSION="12.16.2" \
  JQ_VERSION="1.6" \
  JQ_SHA256="af986793a515d500ab2d35f8d2aecd656e764504b789b66d7e1a0b727a124c44" \
@@ -166,7 +166,7 @@ RUN set -ex \
 
 #****************      PHP     ****************************************************
 ENV GPG_KEYS="CBAF69F173A0FEA4B537F470D66C9593118BCCB6 F38252826ACD957EF380D39F2F7956BC5DA04B5D" \
-    PHP_DOWNLOAD_SHA="91aaee3dbdc71b69b4f3292f9d99211172a2fa926c3f3bbdb0e85dab03dd2bcb" \
+    PHP_DOWNLOAD_SHA="6a30304c27f7e7a94538f5ffec599f600ee93aedbbecad8aa4f8bec539b10ad8" \
     PHPPATH="/php" \
     PHP_INI_DIR="/usr/local/etc/php" \
     PHP_CFLAGS="-fstack-protector -fpic -fpie -O2" \
