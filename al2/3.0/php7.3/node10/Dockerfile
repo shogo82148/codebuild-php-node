@@ -82,7 +82,7 @@ FROM tools AS runtimes
 
 #****************      NODEJS     ****************************************************
 
-ENV NODE_VERSION="10.20.0"
+ENV NODE_VERSION="10.20.1"
 
 RUN  n $NODE_VERSION && npm install --save-dev -g -f grunt && npm install --save-dev -g -f grunt-cli && npm install --save-dev -g -f webpack \
      && curl -sSL https://dl.yarnpkg.com/rpm/yarn.repo | tee /etc/yum.repos.d/yarn.repo \
@@ -109,7 +109,7 @@ RUN set -ex \
 #**************** END PYTHON *****************************************************
 
 #****************      PHP     ****************************************************
-ENV PHP_VERSION="7.3.16"
+ENV PHP_VERSION="7.3.17"
 COPY tools/runtime_configs/php/7.3 /root/.phpenv/plugins/php-build/share/php-build/definitions/$PHP_VERSION
 RUN phpenv install $PHP_VERSION && rm -rf /tmp/* \
     && phpenv global $PHP_VERSION \
