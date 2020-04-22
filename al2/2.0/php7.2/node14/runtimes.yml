@@ -1,0 +1,24 @@
+version: 0.1
+
+runtimes:
+  python:
+    versions:
+      3.7:
+        commands:
+          - echo "Installing Python version 3.7 ..."
+  php:
+    versions:
+      7.2:
+        commands:
+          - echo "Installing PHP version 7.2 ..."
+  nodejs:
+    versions:
+      14:
+        commands:
+          - echo "Installing Node.js version 14.0.0 ..."
+          - n 14.0.0
+  docker:
+    versions:
+      18:
+        commands:
+          - echo "Installing Docker version 18 ..."
