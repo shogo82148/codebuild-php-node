@@ -1,141 +1,27 @@
 #!/bin/sh
 
-(
-    cd ubuntu/1.0 && \
-    echo updating php7.1 node10 standard-1.0 >&2 && \
-    ./update.pl 7.1 10 && \
-    echo updating php7.1 node12 standard-1.0 >&2 && \
-    ./update.pl 7.1 12 && \
-    echo updating php7.2 node10 standard-1.0 >&2 && \
-    ./update.pl 7.2 10 && \
-    echo updating php7.2 node12 standard-1.0 >&2 && \
-    ./update.pl 7.2 12 && \
-    echo updating php7.3 node10 standard-1.0 >&2 && \
-    ./update.pl 7.3 10 && \
-    echo updating php7.3 node12 standard-1.0 >&2 && \
-    ./update.pl 7.3 12 \
-    echo updating php7.4 node10 standard-2.0 >&2 && \
-    ./update.pl 7.4 10 && \
-    echo updating php7.4 node12 standard-2.0 >&2 && \
-    ./update.pl 7.4 12
-) || exit 1
+for PHP in 7.1 7.2 7.3 7.4
+do
+    for NODE in 10 12 14
+    do
 
-(
-    cd ubuntu/2.0 && \
-    echo updating php7.1 node10 standard-2.0 >&2 && \
-    ./update.pl 7.1 10 && \
-    echo updating php7.1 node12 standard-2.0 >&2 && \
-    ./update.pl 7.1 12 && \
-    echo updating php7.2 node10 standard-2.0 >&2 && \
-    ./update.pl 7.2 10 && \
-    echo updating php7.2 node12 standard-2.0 >&2 && \
-    ./update.pl 7.2 12 && \
-    echo updating php7.3 node10 standard-2.0 >&2 && \
-    ./update.pl 7.3 10 && \
-    echo updating php7.3 node12 standard-2.0 >&2 && \
-    ./update.pl 7.3 12 \
-    echo updating php7.4 node10 standard-2.0 >&2 && \
-    ./update.pl 7.4 10 && \
-    echo updating php7.4 node12 standard-2.0 >&2 && \
-    ./update.pl 7.4 12
-) || exit 1
+        for STANDARD in 1.0 2.0 3.0 4.0
+        do
+        (
+            cd "ubuntu/$STANDARD" && \
+            echo updating "php$PHP" "node$NODE" "standard-$STANDARD" >&2 && \
+            ./update.pl "$PHP" "$NODE"
+        ) || exit 1
+        done
 
-(
-    cd ubuntu/3.0 && \
-    echo updating php7.1 node10 standard-3.0 >&2 && \
-    ./update.pl 7.1 10 && \
-    echo updating php7.1 node12 standard-3.0 >&2 && \
-    ./update.pl 7.1 12 && \
-    echo updating php7.2 node10 standard-3.0 >&2 && \
-    ./update.pl 7.2 10 && \
-    echo updating php7.2 node12 standard-3.0 >&2 && \
-    ./update.pl 7.2 12 && \
-    echo updating php7.3 node10 standard-3.0 >&2 && \
-    ./update.pl 7.3 10 && \
-    echo updating php7.3 node12 standard-3.0 >&2 && \
-    ./update.pl 7.3 12 \
-    echo updating php7.4 node10 standard-3.0 >&2 && \
-    ./update.pl 7.4 10 && \
-    echo updating php7.4 node12 standard-3.0 >&2 && \
-    ./update.pl 7.4 12
-) || exit 1
+        for AL2 in 1.0 2.0 3.0
+        do
+        (
+            cd "al2/$AL2" && \
+            echo updating "php$PHP" "node$NODE" "amazonlinux2-$AL2" >&2 && \
+            ./update.pl "$PHP" "$NODE"
+        ) || exit 1
+        done
 
-(
-    cd ubuntu/4.0 && \
-    echo updating php7.1 node10 standard-4.0 >&2 && \
-    ./update.pl 7.1 10 && \
-    echo updating php7.1 node12 standard-4.0 >&2 && \
-    ./update.pl 7.1 12 && \
-    echo updating php7.2 node10 standard-4.0 >&2 && \
-    ./update.pl 7.2 10 && \
-    echo updating php7.2 node12 standard-4.0 >&2 && \
-    ./update.pl 7.2 12 && \
-    echo updating php7.3 node10 standard-4.0 >&2 && \
-    ./update.pl 7.3 10 && \
-    echo updating php7.3 node12 standard-4.0 >&2 && \
-    ./update.pl 7.3 12 \
-    echo updating php7.4 node10 standard-4.0 >&2 && \
-    ./update.pl 7.4 10 && \
-    echo updating php7.4 node12 standard-4.0 >&2 && \
-    ./update.pl 7.4 12
-) || exit 1
-
-(
-    cd al2/1.0 && \
-    echo updating php7.1 node10 amazonlinux2-1.0 >&2 && \
-    ./update.pl 7.1 10 && \
-    echo updating php7.1 node12 amazonlinux2-1.0 >&2 && \
-    ./update.pl 7.1 12 && \
-    echo updating php7.2 node10 amazonlinux2-1.0 >&2 && \
-    ./update.pl 7.2 10 && \
-    echo updating php7.2 node12 amazonlinux2-1.0 >&2 && \
-    ./update.pl 7.2 12 && \
-    echo updating php7.3 node10 amazonlinux2-1.0 >&2 && \
-    ./update.pl 7.3 10 && \
-    echo updating php7.3 node12 amazonlinux2-1.0 >&2 && \
-    ./update.pl 7.3 12 \
-    echo updating php7.4 node10 amazonlinux2-1.0 >&2 && \
-    ./update.pl 7.4 10 && \
-    echo updating php7.4 node12 amazonlinux2-1.0 >&2 && \
-    ./update.pl 7.4 12
-)
-
-(
-    cd al2/2.0 && \
-    echo updating php7.1 node10 amazonlinux2-2.0 >&2 && \
-    ./update.pl 7.1 10 && \
-    echo updating php7.1 node12 amazonlinux2-2.0 >&2 && \
-    ./update.pl 7.1 12 && \
-    echo updating php7.2 node10 amazonlinux2-2.0 >&2 && \
-    ./update.pl 7.2 10 && \
-    echo updating php7.2 node12 amazonlinux2-2.0 >&2 && \
-    ./update.pl 7.2 12 && \
-    echo updating php7.3 node10 amazonlinux2-2.0 >&2 && \
-    ./update.pl 7.3 10 && \
-    echo updating php7.3 node12 amazonlinux2-2.0 >&2 && \
-    ./update.pl 7.3 12 \
-    echo updating php7.4 node10 amazonlinux2-2.0 >&2 && \
-    ./update.pl 7.4 10 && \
-    echo updating php7.4 node12 amazonlinux2-2.0 >&2 && \
-    ./update.pl 7.4 12
-) || exit 1
-
-(
-    cd al2/3.0 && \
-    echo updating php7.1 node10 amazonlinux2-3.0 >&2 && \
-    ./update.pl 7.1 10 && \
-    echo updating php7.1 node12 amazonlinux2-3.0 >&2 && \
-    ./update.pl 7.1 12 && \
-    echo updating php7.2 node10 amazonlinux2-3.0 >&2 && \
-    ./update.pl 7.2 10 && \
-    echo updating php7.2 node12 amazonlinux2-3.0 >&2 && \
-    ./update.pl 7.2 12 && \
-    echo updating php7.3 node10 amazonlinux2-3.0 >&2 && \
-    ./update.pl 7.3 10 && \
-    echo updating php7.3 node12 amazonlinux2-3.0 >&2 && \
-    ./update.pl 7.3 12 \
-    echo updating php7.4 node10 amazonlinux2-3.0 >&2 && \
-    ./update.pl 7.4 10 && \
-    echo updating php7.4 node12 amazonlinux2-3.0 >&2 && \
-    ./update.pl 7.4 12
-) || exit 1
+    done
+done

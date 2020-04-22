@@ -26,6 +26,7 @@ jobs:
         node:
           - "10"
           - "12"
+          - "14"
     steps:
       - uses: actions/checkout@v2
       - run: echo "::set-env name=TAG::${{ secrets.username }}/codebuild-php-node:php${{ matrix.php }}-node${{ matrix.node }}-amazonlinux2-2.0"
