@@ -109,7 +109,7 @@ RUN set -ex \
 #**************** END PYTHON *****************************************************
 
 #****************      PHP     ****************************************************
-ENV PHP_VERSION="7.4.6"
+ENV PHP_VERSION="7.4.7"
 COPY tools/runtime_configs/php/7.4 /root/.phpenv/plugins/php-build/share/php-build/definitions/$PHP_VERSION
 RUN phpenv install $PHP_VERSION && rm -rf /tmp/* \
     && phpenv global $PHP_VERSION \
