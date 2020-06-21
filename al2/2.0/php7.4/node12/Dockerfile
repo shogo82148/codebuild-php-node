@@ -16,8 +16,8 @@ ENV PYTHON_VERSION="3.8.0" \
  NODE_VERSION="12.18.1" \
  JQ_VERSION="1.6" \
  JQ_SHA256="af986793a515d500ab2d35f8d2aecd656e764504b789b66d7e1a0b727a124c44" \
- DOCKER_VERSION="19.03.1" \
- DOCKER_COMPOSE_VERSION="1.24.0"
+ DOCKER_VERSION="19.03.3" \
+ DOCKER_COMPOSE_VERSION="1.26.0"
 
 #****************        Utilities     ********************************************* 
 ENV DOCKER_BUCKET="download.docker.com" \    
@@ -82,10 +82,10 @@ RUN set -ex \
     && docker-compose version
 
 # https://docs.aws.amazon.com/eks/latest/userguide/install-aws-iam-authenticator.html https://docs.aws.amazon.com/AmazonECS/latest/developerguide/ECS_CLI_installation.html
-RUN curl -sS -o /usr/local/bin/aws-iam-authenticator https://amazon-eks.s3-us-west-2.amazonaws.com/1.11.5/2018-12-06/bin/linux/amd64/aws-iam-authenticator \
- && curl -sS -o /usr/local/bin/kubectl https://amazon-eks.s3-us-west-2.amazonaws.com/1.11.5/2018-12-06/bin/linux/amd64/kubectl \
- && curl -sS -o /usr/local/bin/ecs-cli https://amazon-ecs-cli.s3.amazonaws.com/ecs-cli-linux-amd64-latest \
- && chmod +x /usr/local/bin/kubectl /usr/local/bin/aws-iam-authenticator /usr/local/bin/ecs-cli
+RUN curl -sS -o /usr/local/bin/aws-iam-authenticator https://amazon-eks.s3.us-west-2.amazonaws.com/1.16.8/2020-04-16/bin/linux/amd64/aws-iam-authenticator \
+    && curl -sS -o /usr/local/bin/kubectl https://amazon-eks.s3.us-west-2.amazonaws.com/1.16.8/2020-04-16/bin/linux/amd64/kubectl \
+    && curl -sS -o /usr/local/bin/ecs-cli https://amazon-ecs-cli.s3.amazonaws.com/ecs-cli-linux-amd64-latest \
+    && chmod +x /usr/local/bin/kubectl /usr/local/bin/aws-iam-authenticator /usr/local/bin/ecs-cli
 
 VOLUME /var/lib/docker
 
@@ -99,7 +99,7 @@ COPY dockerd-entrypoint.sh /usr/local/bin/
 #****************        PYTHON     *********************************************
 ENV PATH="/usr/local/bin:$PATH" \
     GPG_KEY="E3FF2839C048B25C084DEBE9B26995E310250568" \
-    PYTHON_PIP_VERSION="19.1.1" \
+    PYTHON_PIP_VERSION="19.3.1" \
     LC_ALL=C.UTF-8 \
     LANG=C.UTF-8
 
