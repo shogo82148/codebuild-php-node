@@ -11,7 +11,7 @@ sub curl {
     my $cnt = 0;
     my $sleep = 1;
 RETRY:
-    my $ret = `curl -v -sSL --compressed "$url"`;
+    my $ret = `curl -v -sSL4 --compressed "$url"`;
     if ($?) {
         $cnt++;
         if ($cnt > 10) {
