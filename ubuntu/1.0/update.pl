@@ -3,7 +3,7 @@
 use utf8;
 use strict;
 use warnings;
-use JSON qw(decode_json encode_json);
+use JSON::PP qw(decode_json encode_json);
 use version 0.77;
 
 sub curl {
