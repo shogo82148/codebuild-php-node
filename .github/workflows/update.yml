@@ -18,9 +18,7 @@ jobs:
       with:
         ref: master
     - name: Checking Update
-      uses: "docker://perl:5.30"
-      with:
-        args: bash -c "cpanm JSON && ./update.sh"
+      run: ./update.sh
     - name: Commit
       env:
         GITHUB_TOKEN: ${{ github.token }}
