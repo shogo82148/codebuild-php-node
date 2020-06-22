@@ -21,7 +21,7 @@ ENV PHP_VERSION="7.4.7" \
 #****************        Utilities     ********************************************* 
 ENV DOCKER_BUCKET="download.docker.com" \    
     DOCKER_CHANNEL="stable" \
-    DOCKER_SHA256="6e7d8e24ee46b13d7547d751696d01607d19c8224c1b2c867acc8c779e77734b" \
+    DOCKER_SHA256="0f4336378f61ed73ed55a356ac19e46699a995f2aff34323ba5874d131548b9e" \
     DIND_COMMIT="3b5fac462d21ca164b3778647420016315289034" \    
     GITVERSION_VERSION="4.0.0" \
     DEBIAN_FRONTEND="noninteractive" \
