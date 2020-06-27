@@ -102,9 +102,6 @@ sub execute_template {
     $doc =~ s/%%NODE_MAJOR_VERSION%%/$node_version/g;
     $doc =~ s/%%NODE_VERSION%%/$node->{version}/g;
 
-    mkdir "php$php_version" unless -d "php$php_version";
-    mkdir "php$php_version/node$node_version" unless -d "php$php_version/node$node_version";
-
     my $dir = "php$php_version/node$node_version";
     open $fh, '>', "$dir/$name" or die $!;
     print $fh $doc;
@@ -112,6 +109,9 @@ sub execute_template {
 
     chmod 0755, "$dir/$name" if -x "template/$name";
 }
+
+system("rm", "-rf", "php$php_version/node$node_version");
+mkdir "php$php_version/node$node_version";
 
 if (version->parse("v$php_version") < version->parse("v7.4.0")) {
     execute_template 'Dockerfile-7.3';
@@ -122,6 +122,8 @@ if (version->parse("v$php_version") < version->parse("v7.4.0")) {
 
 execute_template 'ssh_config';
 execute_template 'dockerd-entrypoint.sh';
+system("mkdir", "-p", "php$php_version/node$node_version/tools/runtime_configs/python");
+execute_template 'tools/runtime_configs/python/3.8.1';
 
 __END__
 
