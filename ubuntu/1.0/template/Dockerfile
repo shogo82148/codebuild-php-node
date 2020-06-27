@@ -109,11 +109,6 @@ RUN set -ex \
 
 VOLUME /var/lib/docker
 
-# Configure SSH
-COPY ssh_config /root/.ssh/config
-
-COPY dockerd-entrypoint.sh /usr/local/bin/
-
 #****************      PHP     ****************************************************
 ENV PHP_VERSION="%%PHP_VERSION%%"
 
@@ -141,4 +136,8 @@ RUN phpenv install $PHP_VERSION && rm -rf /tmp/* \
 
 #****************      END NODEJS     ****************************************************
 
-WORKDIR $PHPPATH
+# Configure SSH
+COPY ssh_config /root/.ssh/config
+COPY dockerd-entrypoint.sh /usr/local/bin/
+
+ENTRYPOINT ["dockerd-entrypoint.sh"]
