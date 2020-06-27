@@ -64,7 +64,6 @@ RUN set -ex \
         python-configobj python-openssl rsync sgml-base sgml-data subversion \
         tar tcl tcl8.6 tk tk-dev unzip wget xfsprogs xml-core xmlto xsltproc \
         libzip4 libzip-dev vim xvfb xz-utils zip zlib1g-dev \
-    && apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF \
     && rm -rf /var/lib/apt/lists/* \
     && apt-get clean \
     && wget https://github.com/stedolan/jq/releases/download/jq-${JQ_VERSION}/jq-linux64 -O /usr/local/bin/jq \
