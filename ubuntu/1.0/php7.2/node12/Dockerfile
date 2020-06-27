@@ -109,7 +109,7 @@ RUN set -ex \
     && pyenv global $PYTHON_38_VERSION \
     && pip3 install --no-cache-dir --upgrade --force-reinstall "pip==$PYTHON_PIP_VERSION" \
     && pip3 install --no-cache-dir --upgrade "PyYAML==5.1.2" \
-    && pip3 install --no-cache-dir --upgrade setuptools wheel aws-sam-cli awscli boto3 pipenv virtualenv
+    && pip3 install --no-cache-dir --upgrade setuptools wheel aws-sam-cli awscli boto3 pipenv virtualenv 
 
 VOLUME /var/lib/docker
 
@@ -119,104 +119,16 @@ COPY ssh_config /root/.ssh/config
 COPY dockerd-entrypoint.sh /usr/local/bin/
 
 #****************      PHP     ****************************************************
-ENV GPG_KEYS="1729F83938DA44E27BA0F4D3DBDB397470D12172 B1B44D8F021E4E2D6021E995DC9FF8D3EE5AF27F" \
-    PHP_DOWNLOAD_SHA="8beaa634bb878a96af9bc8643811ea46973f5f41ad2bfb6ab4cfd290e5a39806" \
-    PHPPATH="/php" \
-    PHP_INI_DIR="/usr/local/etc/php" \
-    PHP_CFLAGS="-fstack-protector -fpic -fpie -O2" \
-    PHP_LDFLAGS="-Wl,-O1 -Wl,--hash-style=both -pie" \
-    PHP_SRC_DIR="$SRC_DIR/php" \
-    PHP_CPPFLAGS="$PHP_CFLAGS" \
-    PHP_URL="https://php.shogo82148.com/distributions/php-$PHP_VERSION.tar.xz" \
-    PHP_ASC_URL="https://php.shogo82148.com/distributions/php-$PHP_VERSION.tar.xz.asc"
-RUN set -xe; \
-    mkdir -p $SRC_DIR; \
-    cd $SRC_DIR; \
-    wget -O php.tar.xz "$PHP_URL"; \
-    echo "$PHP_DOWNLOAD_SHA *php.tar.xz" | sha256sum -c -; \
-    wget -O php.tar.xz.asc "$PHP_ASC_URL"; \
-    # export GNUPGHOME="$(mktemp -d)"; \
-    # for key in $GPG_KEYS; do \
-    #     ( gpg --batch --keyserver ha.pool.sks-keyservers.net --recv-keys "$key" \
-    #     || gpg --keyserver pgp.mit.edu --recv-keys "$key" \
-    #     || gpg --keyserver keyserver.pgp.com --recv-keys "$key" ); \
-    # done; \
-    # gpg --batch --verify php.tar.xz.asc php.tar.xz; \
-    # rm -rf "$GNUPGHOME"; \
-    set -eux; \
-    savedAptMark="$(apt-mark showmanual)"; \
-    apt-get update; \
-    apt-get install -y --no-install-recommends libedit-dev dpkg-dev libargon2-0-dev; \
-    rm -rf /var/lib/apt/lists/*; \
-    apt-get clean; \ 
-    export \
-        CFLAGS="$PHP_CFLAGS" \
-        CPPFLAGS="$PHP_CPPFLAGS" \
-        LDFLAGS="$PHP_LDFLAGS" \
-    ; \
-    mkdir -p $PHP_SRC_DIR; \
-    tar -Jxf $SRC_DIR/php.tar.xz -C $PHP_SRC_DIR --strip-components=1; \
-    cd $PHP_SRC_DIR; \
-    gnuArch="$(dpkg-architecture -qDEB_BUILD_GNU_TYPE)"; \
-    debMultiarch="$(dpkg-architecture -qDEB_BUILD_MULTIARCH)"; \
-    if [ ! -d /usr/include/curl ]; then \
-        ln -sT "/usr/include/$debMultiarch/curl" /usr/local/include/curl; \
-    fi; \
-    ./configure \
-        --build="$gnuArch" \
-        --with-config-file-path="$PHP_INI_DIR" \
-        --with-config-file-scan-dir="$PHP_INI_DIR/conf.d" \
-        --disable-cgi \
-    # --enable-ftp is included here because ftp_ssl_connect() needs ftp to be compiled statically (see https://github.com/docker-library/php/issues/236)
-        --enable-ftp \
-    # --enable-mbstring is included here because otherwise there's no way to get pecl to use it properly (see https://github.com/docker-library/php/issues/195)
-        --enable-mbstring \
-    # --enable-mysqlnd is included here because it's harder to compile after the fact than extensions are (since it's a plugin for several extensions, not an extension in itself)
-        --enable-mysqlnd \
-        --enable-sockets \
-        --enable-pcntl \
-    # https://wiki.php.net/rfc/argon2_password_hash (7.2+)
-        --with-password-argon2 \
-        --with-curl \
-        --with-pdo-pgsql \
-        --with-pdo-mysql \
-        --with-libedit \
-        --with-openssl \
-        --with-zlib \
-    $(test "$gnuArch" = 's390x-linux-gnu' && echo '--without-pcre-jit') \
-        --with-libdir="lib/$debMultiarch" \
-    ${PHP_EXTRA_CONFIGURE_ARGS:-} \
-    ; \
-    make -j "$(nproc)"; \
-    make install; \
-    find /usr/local/bin /usr/local/sbin -type f -executable -exec strip --strip-all '{}' + || true; \
-    make clean; \
-    cd /; \
-    rm -rf $PHP_SRC_DIR; \
-    rm $SRC_DIR/php.tar.xz; \
-    apt-mark auto '.*' > /dev/null; \
-    [ -z "$savedAptMark" ] || apt-mark manual $savedAptMark; \
-    find /usr/local -type f -executable -exec ldd '{}' ';' \
-        | awk '/=>/ { print $(NF-1) }' \
-        | sort -u \
-        | xargs -r dpkg-query --search \
-        | cut -d: -f1 \
-        | sort -u \
-        | xargs -r apt-mark manual \
-    ; \
-    apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false; \
-    php --version; \
-    pecl update-channels; \
-    rm -rf /tmp/pear ~/.pearrc; \
-    mkdir "$PHP_INI_DIR"; \
-    mkdir "$PHP_INI_DIR/conf.d"; \
-    touch "$PHP_INI_DIR/conf.d/memory.ini" \
-    && echo "memory_limit = 1G;" >> "$PHP_INI_DIR/conf.d/memory.ini";
+ENV PHP_VERSION="7.2.31"
 
-ENV PATH="$PHPPATH/bin:/usr/local/php/bin:$PATH"
-
+RUN curl -L https://raw.githubusercontent.com/phpenv/phpenv-installer/master/bin/phpenv-installer | bash
+ENV PATH="/root/.phpenv/shims:/root/.phpenv/bin:$PATH"
+COPY tools/runtime_configs/php/7.2 /root/.phpenv/plugins/php-build/share/php-build/definitions/$PHP_VERSION
+RUN phpenv install $PHP_VERSION && rm -rf /tmp/* \
+    && phpenv global $PHP_VERSION \
+    && ( echo "memory_limit = 1G;" >> "/root/.phpenv/versions/$PHP_VERSION/etc/conf.d/memory.ini" ) \
 # Install Composer globally
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer
+    && curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer
 #****************      END PHP     ****************************************************
  
 #****************      NODEJS     ****************************************************
