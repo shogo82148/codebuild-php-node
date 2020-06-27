@@ -46,27 +46,24 @@ RUN set -ex \
     && ssh-keyscan -t rsa,dsa -H bitbucket.org >> ~/.ssh/known_hosts \
     && chmod 600 ~/.ssh/known_hosts \
     && apt-get install -y --no-install-recommends \
-       wget python3 python3-dev python3-pip python3-setuptools fakeroot ca-certificates \
-       netbase gnupg dirmngr bzr mercurial procps \
-       tar gzip zip autoconf automake \
-       bzip2 file g++ gcc imagemagick \
-       libbz2-dev libc6-dev libcurl4-openssl-dev libdb-dev \
-       libevent-dev libffi-dev libgeoip-dev libglib2.0-dev \
-       libjpeg-dev libkrb5-dev liblzma-dev \
-       libmagickcore-dev libmagickwand-dev libmysqlclient-dev \
-       libncurses5-dev libpq-dev libreadline-dev \
-       libsqlite3-dev libssl-dev libtool libwebp-dev \
-       libxml2-dev libxslt1-dev libyaml-dev make \
-       patch xz-utils zlib1g-dev unzip curl \
-       e2fsprogs iptables xfsprogs \
-       less groff liberror-perl \
-       libedit-dev \
-       asciidoc build-essential bzr cvs cvsps docbook-xml docbook-xsl dpkg-dev \
-       libdbd-sqlite3-perl libdbi-perl libdpkg-perl libhttp-date-perl \
-       libio-pty-perl libserf-1-1 libsvn-perl libsvn1 libtcl8.6 libtimedate-perl \
-       libxml2-utils libyaml-perl python-bzrlib python-configobj \
-       sgml-base sgml-data subversion tcl tcl8.6 xml-core xmlto xsltproc \
-       tk gettext gettext-base libapr1 libaprutil1 xvfb expect \
+        apt-utils asciidoc autoconf automake build-essential bzip2 \
+        bzr curl cvs cvsps dirmngr docbook-xml docbook-xsl dpkg-dev \
+        e2fsprogs expect fakeroot file g++ gcc gettext gettext-base \
+        git groff gzip imagemagick iptables jq less libapr1 libaprutil1 \
+        libargon2-0-dev libbz2-dev libc6-dev libcurl4-openssl-dev \
+        libdb-dev libdbd-sqlite3-perl libdbi-perl libdpkg-perl \
+        libedit-dev liberror-perl libevent-dev libffi-dev libgeoip-dev \
+        libglib2.0-dev libhttp-date-perl libio-pty-perl libjpeg-dev \
+        libkrb5-dev liblzma-dev libmagickcore-dev libmagickwand-dev \
+        libmysqlclient-dev libncurses5-dev libncursesw5-dev libonig-dev \
+        libpq-dev libreadline-dev libserf-1-1 libsqlite3-dev libssl-dev \
+        libsvn1 libsvn-perl libtcl8.6 libtidy-dev libtimedate-perl \
+        libtool libwebp-dev libxml2-dev libxml2-utils libxslt1-dev \
+        libyaml-dev libyaml-perl llvm locales make mercurial mlocate mono-devel \
+        netbase openssl patch pkg-config procps python-bzrlib \
+        python-configobj python-openssl rsync sgml-base sgml-data subversion \
+        tar tcl tcl8.6 tk tk-dev unzip wget xfsprogs xml-core xmlto xsltproc \
+        libzip4 libzip-dev vim xvfb xz-utils zip zlib1g-dev \
     && apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF \
     && rm -rf /var/lib/apt/lists/* \
     && apt-get clean \
