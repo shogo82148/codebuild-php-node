@@ -32,8 +32,7 @@ ENV PHP_VERSION="7.2.31" \
 RUN set -ex \
     && echo 'Acquire::CompressionTypes::Order:: "gz";' > /etc/apt/apt.conf.d/99use-gzip-compression \
     && apt-get update \
-    && apt install -y apt-transport-https \
-    && apt-get update \
+    && apt install -y apt-transport-https gnupg ca-certificates \
     && apt-get install software-properties-common -y --no-install-recommends \
     && apt-add-repository ppa:git-core/ppa \
     && apt-get update \
