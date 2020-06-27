@@ -113,16 +113,17 @@ sub execute_template {
     chmod 0755, "$dir/$name" if -x "template/$name";
 }
 
-if (version->parse("v$php_version") < version->parse("v7.4.0")) {
-    execute_template 'Dockerfile-7.3';
-    system("mv", "php$php_version/node$node_version/Dockerfile-7.3", "php$php_version/node$node_version/Dockerfile")
-} else {
-    execute_template 'Dockerfile';
-}
+system("rm", "-rf", "php$php_version/node$node_version");
+mkdir "php$php_version/node$node_version";
 
+execute_template 'Dockerfile';
 execute_template 'ssh_config';
 execute_template 'dockerd-entrypoint.sh';
 execute_template 'runtimes.yml';
+system("mkdir", "-p", "php$php_version/node$node_version/tools/runtime_configs/python");
+execute_template 'tools/runtime_configs/python/3.8.1';
+system("mkdir", "-p", "php$php_version/node$node_version/tools/runtime_configs/php");
+execute_template "tools/runtime_configs/php/$php_version";
 
 __END__
 
