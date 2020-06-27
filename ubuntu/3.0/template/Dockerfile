@@ -110,13 +110,6 @@ RUN set -ex \
 
 VOLUME /var/lib/docker
 
-# Configure SSH
-COPY ssh_config /root/.ssh/config
-
-COPY runtimes.yml /codebuild/image/config/runtimes.yml
-
-COPY dockerd-entrypoint.sh /usr/local/bin/
-
 #****************      PHP     ****************************************************
 ENV PHP_VERSION="%%PHP_VERSION%%"
 
@@ -143,3 +136,10 @@ RUN git clone https://github.com/tj/n $N_SRC_DIR \
     && cd / && rm -rf $N_SRC_DIR; 
 
 #****************      END NODEJS     ****************************************************
+
+# Configure SSH
+COPY ssh_config /root/.ssh/config
+COPY runtimes.yml /codebuild/image/config/runtimes.yml
+COPY dockerd-entrypoint.sh /usr/local/bin/
+
+ENTRYPOINT ["dockerd-entrypoint.sh"]
