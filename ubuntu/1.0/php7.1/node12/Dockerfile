@@ -49,7 +49,7 @@ RUN set -ex \
         apt-utils asciidoc autoconf automake build-essential bzip2 \
         bzr curl cvs cvsps dirmngr docbook-xml docbook-xsl dpkg-dev \
         e2fsprogs expect fakeroot file g++ gcc gettext gettext-base \
-        git groff gzip imagemagick iptables jq less libapr1 libaprutil1 \
+        git groff gzip imagemagick iptables less libapr1 libaprutil1 \
         libargon2-0-dev libbz2-dev libc6-dev libcurl4-openssl-dev \
         libdb-dev libdbd-sqlite3-perl libdbi-perl libdpkg-perl \
         libedit-dev liberror-perl libevent-dev libffi-dev libgeoip-dev \
@@ -59,7 +59,7 @@ RUN set -ex \
         libpq-dev libreadline-dev libserf-1-1 libsqlite3-dev libssl-dev \
         libsvn1 libsvn-perl libtcl8.6 libtidy-dev libtimedate-perl \
         libtool libwebp-dev libxml2-dev libxml2-utils libxslt1-dev \
-        libyaml-dev libyaml-perl llvm locales make mercurial mlocate mono-devel \
+        libyaml-dev libyaml-perl llvm locales make mercurial mlocate \
         netbase openssl patch pkg-config procps python-bzrlib \
         python-configobj python-openssl rsync sgml-base sgml-data subversion \
         tar tcl tcl8.6 tk tk-dev unzip wget xfsprogs xml-core xmlto xsltproc \
