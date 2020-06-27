@@ -30,8 +30,7 @@ ENV PHP_VERSION="7.4.7" \
 RUN set -ex \
     && echo 'Acquire::CompressionTypes::Order:: "gz";' > /etc/apt/apt.conf.d/99use-gzip-compression \
     && apt-get update \
-    && apt install -y apt-transport-https \
-    && apt-get update \
+    && apt install -y apt-transport-https gnupg ca-certificates \
     && apt-get install software-properties-common -y --no-install-recommends \
     && apt-add-repository -y ppa:git-core/ppa \
     && apt-get update \
@@ -58,7 +57,6 @@ RUN set -ex \
        patch xz-utils zlib1g-dev unzip curl \
        e2fsprogs iptables xfsprogs \
        less groff liberror-perl \
-       libedit-dev \
        asciidoc build-essential bzr cvs cvsps docbook-xml docbook-xsl dpkg-dev \
        libdbd-sqlite3-perl libdbi-perl libdpkg-perl libhttp-date-perl \
        libio-pty-perl libserf-1-1 libsvn-perl libsvn1 libtcl8.6 libtimedate-perl \
