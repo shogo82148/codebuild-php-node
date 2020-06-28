@@ -39,29 +39,38 @@ RUN set -ex \
     && chmod 600 ~/.ssh/known_hosts \
     && yum install -y $EPEL_REPO \
     && yum groupinstall -y "Development tools" \
-    && yum install -y wget fakeroot \
-       bzr mercurial procps-ng \
-       ImageMagick \
-       openssl-devel libdb-devel \
-       libevent-devel libffi-devel GeoIP-devel glib2-devel \
-       libjpeg-devel krb5-server xz-devel \
-       mariadb-devel \
-       ncurses-devel postgresql-devel readline-devel \
-       libsqlite3x-devel libwebp-devel \
-       libxml2-devel libxslt-devel libyaml-devel \
-       e2fsprogs iptables xfsprogs \
-       groff \
-       asciidoc cvs cvsps docbook-dtds docbook-style-xsl \
-       perl-DBD-SQLite perl-DBI perl-HTTP-Date \
-       perl-IO-Pty-Easy libserf subversion-perl tcl perl-TimeDate \
-       perl-YAML-LibYAML bzrtools python-configobj \
-       sgml-common xmlto libxslt \
-       tk expect parallel rsync \
+    && yum install -y \
+        GeoIP-devel ImageMagick asciidoc bzip2-devel bzr bzrtools cvs cvsps \
+        docbook-dtds docbook-style-xsl dpkg-dev e2fsprogs expat-devel expect fakeroot \
+        glib2-devel groff gzip icu iptables krb5-server libargon2-devel \
+        libcurl-devel libdb-devel libedit-devel libevent-devel libffi-devel \
+        libicu-devel libjpeg-devel libpng-devel libserf libsqlite3x-devel \
+        libtidy-devel libunwind libwebp-devel libxml2-devel libxslt libxslt-devel \
+        libyaml-devel libzip-devel mariadb-devel mercurial mlocate \
+        ncurses-devel oniguruma-devel openssl openssl-devel perl-DBD-SQLite \
+        perl-DBI perl-HTTP-Date perl-IO-Pty-Easy perl-TimeDate perl-YAML-LibYAML \
+        postgresql-devel procps-ng python-configobj readline-devel rsync sgml-common \
+        subversion-perl tar tcl tk vim wget which xfsprogs xmlto xorg-x11-server-Xvfb xz-devel \
     && rm -rf /var/cache/yum/* \
     && yum clean all \
     && wget https://github.com/stedolan/jq/releases/download/jq-${JQ_VERSION}/jq-linux64 -O /usr/local/bin/jq \
     && echo "$JQ_SHA256 /usr/local/bin/jq" | sha256sum -c - \
     && chmod +x /usr/local/bin/jq
+
+RUN useradd codebuild-user
+
+# Install Git
+RUN set -ex \
+   && GIT_VERSION=2.26.2 \
+   && GIT_TAR_FILE=git-$GIT_VERSION.tar.gz \
+   && GIT_SRC=https://github.com/git/git/archive/v${GIT_VERSION}.tar.gz  \
+   && curl -L -o $GIT_TAR_FILE $GIT_SRC \
+   && tar zxvf $GIT_TAR_FILE \
+   && cd git-$GIT_VERSION \
+   && make -j4 prefix=/usr \
+   && make install prefix=/usr \
+   && cd .. ; rm -rf git-$GIT_VERSION \
+   && rm -rf $GIT_TAR_FILE /tmp/*
 
 # Install Docker
 RUN set -ex \
@@ -81,11 +90,12 @@ RUN set -ex \
 # Ensure docker-compose works
     && docker-compose version
 
+# AWS Tools
 # https://docs.aws.amazon.com/eks/latest/userguide/install-aws-iam-authenticator.html https://docs.aws.amazon.com/AmazonECS/latest/developerguide/ECS_CLI_installation.html
-RUN curl -sS -o /usr/local/bin/aws-iam-authenticator https://amazon-eks.s3-us-west-2.amazonaws.com/1.11.5/2018-12-06/bin/linux/amd64/aws-iam-authenticator \
- && curl -sS -o /usr/local/bin/kubectl https://amazon-eks.s3-us-west-2.amazonaws.com/1.11.5/2018-12-06/bin/linux/amd64/kubectl \
- && curl -sS -o /usr/local/bin/ecs-cli https://ecs-cli-linux-amd64-latest.s3.amazonaws.com/amazon-ecs-cli \
- && chmod +x /usr/local/bin/kubectl /usr/local/bin/aws-iam-authenticator /usr/local/bin/ecs-cli
+RUN curl -sS -o /usr/local/bin/aws-iam-authenticator https://amazon-eks.s3-us-west-2.amazonaws.com/1.14.6/2019-08-22/bin/linux/amd64/aws-iam-authenticator \
+    && curl -sS -o /usr/local/bin/kubectl https://amazon-eks.s3-us-west-2.amazonaws.com/1.14.6/2019-08-22/bin/linux/amd64/kubectl \
+    && curl -sS -o /usr/local/bin/ecs-cli https://amazon-ecs-cli.s3.amazonaws.com/ecs-cli-linux-amd64-latest \
+    && chmod +x /usr/local/bin/kubectl /usr/local/bin/aws-iam-authenticator /usr/local/bin/ecs-cli
 
 VOLUME /var/lib/docker
 
@@ -96,160 +106,31 @@ COPY runtimes.yml /codebuild/image/config/runtimes.yml
 
 COPY dockerd-entrypoint.sh /usr/local/bin/
 
-#****************        PYTHON     *********************************************
-ENV PATH="/usr/local/bin:$PATH" \
-    GPG_KEY="E3FF2839C048B25C084DEBE9B26995E310250568" \
-    PYTHON_PIP_VERSION="19.1.1" \
-    LC_ALL=C.UTF-8 \
-    LANG=C.UTF-8
-
-RUN yum install -y tcl-devel tk-devel bzip2-devel gdbm-devel libuuid-devel \
-    && wget -O python.tar.xz "https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tar.xz" \
-    && wget -O python.tar.xz.asc "https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tar.xz.asc" \
-    && export GNUPGHOME="$(mktemp -d)" \
-    && (gpg --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys "$GPG_KEY" \
-        || gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys "$GPG_KEY" \
-        || gpg --keyserver pgp.mit.edu --recv-keys "$GPG_KEY") \
-    && gpg --batch --verify python.tar.xz.asc python.tar.xz \
-    && rm -r "$GNUPGHOME" python.tar.xz.asc \
-    && mkdir -p /usr/src/python \
-    && tar -xJC /usr/src/python --strip-components=1 -f python.tar.xz \
-    && rm python.tar.xz \
-    \
-    && cd /usr/src/python \
-    && ./configure \
-        --enable-loadable-sqlite-extensions \
-        --enable-shared \
-    && make -j$(nproc) \
-    && make install \
-    && ln -s /usr/local/lib/libpython3.8.so.1.0 /usr/lib/libpython3.8.so.1.0 \
-    && ldconfig \
-# explicit path to "pip3" to ensure distribution-provided "pip3" cannot interfere
-    && if [ ! -e /usr/local/bin/pip3 ]; then : \
-        && wget -O /tmp/get-pip.py 'https://bootstrap.pypa.io/get-pip.py' \
-        && python3 /tmp/get-pip.py "pip==$PYTHON_PIP_VERSION" \
-        && rm /tmp/get-pip.py \
-    ; fi \
-# we use "--force-reinstall" for the case where the version of pip we're trying to install is the same as the version bundled with Python
-# ("Requirement already up-to-date: pip==8.1.2 in /usr/local/lib/python3.6/site-packages")
-# https://github.com/docker-library/python/pull/143#issuecomment-241032683
-    && pip3 install --no-cache-dir --upgrade --force-reinstall "pip==$PYTHON_PIP_VERSION" \
-        && pip install pipenv virtualenv --no-cache-dir \
-        && pip3 install --no-cache-dir --upgrade setuptools wheel \
-# then we use "pip list" to ensure we don't have more than one pip version installed
-# https://github.com/docker-library/python/pull/100
-    && [ "$(pip list |tac|tac| awk -F '[ ()]+' '$1 == "pip" { print $2; exit }')" = "$PYTHON_PIP_VERSION" ] \
-    \
-    && find /usr/local -depth \
-        \( \
-            \( -type d -a -name test -o -name tests \) \
-            -o \
-            \( -type f -a -name '*.pyc' -o -name '*.pyo' \) \
-        \) -exec rm -rf '{}' + \
-    && rm -rf /usr/src/python ~/.cache \
-    && cd /usr/local/bin \
-    && { [ -e easy_install ] || ln -s easy_install-* easy_install; } \
-    && ln -s idle3 idle \
-    && ln -s pydoc3 pydoc \
-    && ln -s python3 python \
-    && ln -s python3-config python-config \
-    && rm -rf /var/cache/yum/* \
-    && yum clean all
-#****************      END PYTHON     *********************************************
-
-ENV PATH="/root/.local/bin:$PATH"
-
+#**************** PYTHON *****************************************************
+ENV PYTHON_38_VERSION="3.8.1" \
+    PYTHON_PIP_VERSION="19.3.1"
+RUN curl https://pyenv.run | bash
+ENV PATH="/root/.pyenv/shims:/root/.pyenv/bin:$PATH"
+COPY tools/runtime_configs/python/$PYTHON_38_VERSION /root/.pyenv/plugins/python-build/share/python-build/$PYTHON_38_VERSION
 RUN set -ex \
-    && pip3 install --user aws-sam-cli \
-    && sam --version \
-    && pip3 install awscli boto3
+    && env PYTHON_CONFIGURE_OPTS="--enable-shared" pyenv install $PYTHON_38_VERSION && rm -rf /tmp/* \
+    && pyenv global $PYTHON_38_VERSION \
+    && pip3 install --no-cache-dir --upgrade --force-reinstall "pip==$PYTHON_PIP_VERSION" \
+    && pip3 install --no-cache-dir --upgrade "PyYAML==5.1.2" \
+    && pip3 install --no-cache-dir --upgrade setuptools wheel aws-sam-cli awscli boto3 pipenv virtualenv
+#**************** END PYTHON *****************************************************
 
 #****************      PHP     ****************************************************
-ENV GPG_KEYS="CBAF69F173A0FEA4B537F470D66C9593118BCCB6 F38252826ACD957EF380D39F2F7956BC5DA04B5D" \
-    PHP_DOWNLOAD_SHA="6402faa19b1a8c4317c7612632bce985684a5bbae0980a5779a4019439882422" \
-    PHPPATH="/php" \
-    PHP_INI_DIR="/usr/local/etc/php" \
-    PHP_CFLAGS="-fstack-protector -fpic -fpie -O2" \
-    PHP_LDFLAGS="-Wl,-O1 -Wl,--hash-style=both -pie" \
-    PHP_SRC_DIR="$SRC_DIR/php" \
-    PHP_CPPFLAGS="$PHP_CFLAGS" \
-    PHP_URL="https://php.shogo82148.com/distributions/php-$PHP_VERSION.tar.xz" \
-    PHP_ASC_URL="https://php.shogo82148.com/distributions/php-$PHP_VERSION.tar.xz.asc"
-RUN set -xe; \
-    mkdir -p $SRC_DIR; \
-    cd $SRC_DIR; \
-    yum install -y curl-devel; \
-    wget -O php.tar.xz "$PHP_URL"; \
-    echo "$PHP_DOWNLOAD_SHA *php.tar.xz" | sha256sum -c -; \
-    wget -O php.tar.xz.asc "$PHP_ASC_URL"; \
-    export GNUPGHOME="$(mktemp -d)"; \
-    for key in $GPG_KEYS; do \
-        ( gpg --batch --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys "$key" \
-        || gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys "$key" \
-        || gpg --keyserver pgp.mit.edu --recv-keys "$key" ); \
-    done; \
-    gpg --batch --verify php.tar.xz.asc php.tar.xz; \
-    rm -rf "$GNUPGHOME"; \
-    set -eux; \
-    yum install -y libedit-devel dpkg-dev libargon2-devel re2c; \
-    export \
-        CFLAGS="$PHP_CFLAGS" \
-        CPPFLAGS="$PHP_CPPFLAGS" \
-        LDFLAGS="$PHP_LDFLAGS" \
-    ; \
-    mkdir -p $PHP_SRC_DIR; \
-    tar -Jxf $SRC_DIR/php.tar.xz -C $PHP_SRC_DIR --strip-components=1; \
-    cd $PHP_SRC_DIR; \
-    gnuArch="$(dpkg-architecture -qDEB_BUILD_GNU_TYPE)"; \
-    debMultiarch="$(dpkg-architecture -qDEB_BUILD_MULTIARCH)"; \
-    if [ ! -d /usr/include/curl ]; then \
-        ln -sT "/usr/include/$debMultiarch/curl" /usr/local/include/curl; \
-    fi; \
-    ./configure \
-        --build="$gnuArch" \
-        --with-config-file-path="$PHP_INI_DIR" \
-        --with-config-file-scan-dir="$PHP_INI_DIR/conf.d" \
-        --disable-cgi \
-    # --enable-ftp is included here because ftp_ssl_connect() needs ftp to be compiled statically (see https://github.com/docker-library/php/issues/236)
-        --enable-ftp \
-    # --enable-mbstring is included here because otherwise there's no way to get pecl to use it properly (see https://github.com/docker-library/php/issues/195)
-        --enable-mbstring \
-    # --enable-mysqlnd is included here because it's harder to compile after the fact than extensions are (since it's a plugin for several extensions, not an extension in itself)
-        --enable-mysqlnd \
-        --enable-sockets \
-        --enable-pcntl \
-    # https://wiki.php.net/rfc/argon2_password_hash (7.2+)
-        --with-password-argon2 \
-        --with-curl \
-        --with-pdo-pgsql \
-        --with-pdo-mysql \
-        --with-libedit \
-        --with-openssl \
-        --with-zlib \
-    $(test "$gnuArch" = 's390x-linux-gnu' && echo '--without-pcre-jit') \
-        --with-libdir="lib/$debMultiarch" \
-    ${PHP_EXTRA_CONFIGURE_ARGS:-} \
-    ; \
-    make -j "$(nproc)"; \
-    make install; \
-    find /usr/local/bin /usr/local/sbin -type f -executable -exec strip --strip-all '{}' + || true; \
-    make clean; \
-    cd /; \
-    rm -rf $PHP_SRC_DIR; \
-    rm $SRC_DIR/php.tar.xz; \
-    php --version; \
-    pecl update-channels; \
-    rm -rf /tmp/pear ~/.pearrc; \
-    mkdir "$PHP_INI_DIR"; \
-    mkdir "$PHP_INI_DIR/conf.d"; \
-    touch "$PHP_INI_DIR/conf.d/memory.ini" \
-    && echo "memory_limit = 1G;" >> "$PHP_INI_DIR/conf.d/memory.ini"; \
-    rm -rf /var/cache/yum/* && yum clean all
+ENV PHP_VERSION="7.3.19"
 
-ENV PATH="$PHPPATH/bin:/usr/local/php/bin:$PATH"
-
+RUN curl -L https://raw.githubusercontent.com/phpenv/phpenv-installer/master/bin/phpenv-installer | bash
+ENV PATH="/root/.phpenv/shims:/root/.phpenv/bin:$PATH"
+COPY tools/runtime_configs/php/7.3 /root/.phpenv/plugins/php-build/share/php-build/definitions/$PHP_VERSION
+RUN phpenv install $PHP_VERSION && rm -rf /tmp/* \
+    && phpenv global $PHP_VERSION \
+    && ( echo "memory_limit = 1G;" >> "/root/.phpenv/versions/$PHP_VERSION/etc/conf.d/memory.ini" ) \
 # Install Composer globally
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer
+    && curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer
 #****************      END PHP     ****************************************************
 
 #****************      NODEJS     ****************************************************
