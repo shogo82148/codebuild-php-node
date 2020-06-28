@@ -1,11 +1,11 @@
 name: Update
 
 on:
-  pull_request:
-    paths:
-      - .github/workflows/update.yml
-  schedule:
-  - cron: "53 5 * * *"
+  # pull_request:
+  #   paths:
+  #     - .github/workflows/update.yml
+  # schedule:
+  # - cron: "53 5 * * *"
 
 jobs:
 
