@@ -122,7 +122,7 @@ execute_template 'ssh_config';
 execute_template 'dockerd-entrypoint.sh';
 execute_template 'runtimes.yml';
 execute_template 'amazon-ssm-agent.json';
-execute_template 'tools/runtime_configs/python/3.7.6';
+execute_template 'tools/runtime_configs/python/3.8.1';
 execute_template "tools/runtime_configs/php/$php_version";
 
 __END__
