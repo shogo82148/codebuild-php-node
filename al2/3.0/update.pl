@@ -110,19 +110,17 @@ sub execute_template {
     chmod 0755, "$dir/$name" if -x "template/$name";
 }
 
-mkdir "php$php_version";
+system("rm", "-rf", "php$php_version/node$node_version");
 mkdir "php$php_version/node$node_version";
-mkdir "php$php_version/node$node_version/tools";
-mkdir "php$php_version/node$node_version/tools/runtime_configs";
-mkdir "php$php_version/node$node_version/tools/runtime_configs/python";
-mkdir "php$php_version/node$node_version/tools/runtime_configs/php";
 
 execute_template 'Dockerfile';
 execute_template 'ssh_config';
 execute_template 'dockerd-entrypoint.sh';
 execute_template 'runtimes.yml';
 execute_template 'amazon-ssm-agent.json';
-execute_template 'tools/runtime_configs/python/3.8.1';
+system("mkdir", "-p", "php$php_version/node$node_version/tools/runtime_configs/python");
+execute_template 'tools/runtime_configs/python/3.8.3';
+system("mkdir", "-p", "php$php_version/node$node_version/tools/runtime_configs/php");
 execute_template "tools/runtime_configs/php/$php_version";
 
 __END__
