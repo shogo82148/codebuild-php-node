@@ -11,18 +11,16 @@
 
 FROM amazonlinux:2
 
-ENV PYTHON_VERSION="3.7.3" \
- PHP_VERSION="7.1.33" \
- NODE_VERSION="14.4.0" \
- JQ_VERSION="1.6" \
- JQ_SHA256="af986793a515d500ab2d35f8d2aecd656e764504b789b66d7e1a0b727a124c44" \
- DOCKER_VERSION="18.09.6" \
- DOCKER_COMPOSE_VERSION="1.24.0"
-
 #****************        Utilities     ********************************************* 
-ENV DOCKER_BUCKET="download.docker.com" \    
-    DOCKER_CHANNEL="stable" \
+ENV PHP_VERSION="7.1.33" \
+    NODE_VERSION="14.4.0" \
+    JQ_VERSION="1.6" \
+    JQ_SHA256="af986793a515d500ab2d35f8d2aecd656e764504b789b66d7e1a0b727a124c44" \
+    DOCKER_VERSION="18.09.6" \
     DOCKER_SHA256="1f3f6774117765279fce64ee7f76abbb5f260264548cf80631d68fb2d795bb09" \
+    DOCKER_COMPOSE_VERSION="1.24.0" \
+    DOCKER_BUCKET="download.docker.com" \    
+    DOCKER_CHANNEL="stable" \
     DIND_COMMIT="3b5fac462d21ca164b3778647420016315289034" \    
     GITVERSION_VERSION="4.0.0" \
     DEBIAN_FRONTEND="noninteractive" \
