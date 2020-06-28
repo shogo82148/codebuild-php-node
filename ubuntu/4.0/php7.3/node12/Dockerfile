@@ -9,7 +9,6 @@ RUN set -ex \
     && echo 'Acquire::CompressionTypes::Order:: "gz";' > /etc/apt/apt.conf.d/99use-gzip-compression \
     && apt-get update \
     && apt install -y apt-transport-https gnupg ca-certificates \
-    && apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF \
     && apt-get install software-properties-common -y --no-install-recommends \
     && apt-add-repository -y ppa:git-core/ppa \
     && apt-get update \
