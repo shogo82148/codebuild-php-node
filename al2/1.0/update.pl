@@ -118,7 +118,7 @@ execute_template 'ssh_config';
 execute_template 'dockerd-entrypoint.sh';
 execute_template 'runtimes.yml';
 system("mkdir", "-p", "php$php_version/node$node_version/tools/runtime_configs/python");
-execute_template 'tools/runtime_configs/python/3.8.1';
+execute_template 'tools/runtime_configs/python/3.7.6';
 system("mkdir", "-p", "php$php_version/node$node_version/tools/runtime_configs/php");
 execute_template "tools/runtime_configs/php/$php_version";
 
