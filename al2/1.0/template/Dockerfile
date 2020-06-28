@@ -120,6 +120,8 @@ RUN set -ex \
 
 #****************      PHP     ****************************************************
 ENV PHP_VERSION="%%PHP_VERSION%%"
+RUN curl -L https://raw.githubusercontent.com/phpenv/phpenv-installer/master/bin/phpenv-installer | bash
+ENV PATH="/root/.phpenv/shims:/root/.phpenv/bin:$PATH"
 COPY tools/runtime_configs/php/%%PHP_MINOR_VERSION%% /root/.phpenv/plugins/php-build/share/php-build/definitions/$PHP_VERSION
 RUN phpenv install $PHP_VERSION && rm -rf /tmp/* \
     && phpenv global $PHP_VERSION \
