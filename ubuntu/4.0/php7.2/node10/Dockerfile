@@ -9,7 +9,6 @@ RUN set -ex \
     && echo 'Acquire::CompressionTypes::Order:: "gz";' > /etc/apt/apt.conf.d/99use-gzip-compression \
     && apt-get update \
     && apt install -y apt-transport-https gnupg ca-certificates \
-    && apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF \
     && apt-get install software-properties-common -y --no-install-recommends \
     && apt-add-repository -y ppa:git-core/ppa \
     && apt-get update \
@@ -56,8 +55,8 @@ FROM core AS tools
 RUN set -ex \
 # AWS Tools
 # https://docs.aws.amazon.com/eks/latest/userguide/install-aws-iam-authenticator.html https://docs.aws.amazon.com/AmazonECS/latest/developerguide/ECS_CLI_installation.html
-    && curl -sS -o /usr/local/bin/aws-iam-authenticator https://amazon-eks.s3-us-west-2.amazonaws.com/1.14.6/2019-08-22/bin/linux/amd64/aws-iam-authenticator \
-    && curl -sS -o /usr/local/bin/kubectl https://amazon-eks.s3-us-west-2.amazonaws.com/1.14.6/2019-08-22/bin/linux/amd64/kubectl \
+    && curl -sS -o /usr/local/bin/aws-iam-authenticator https://amazon-eks.s3.us-west-2.amazonaws.com/1.16.8/2020-04-16/bin/linux/amd64/aws-iam-authenticator \
+    && curl -sS -o /usr/local/bin/kubectl https://amazon-eks.s3.us-west-2.amazonaws.com/1.16.8/2020-04-16/bin/linux/amd64/kubectl \
     && curl -sS -o /usr/local/bin/ecs-cli https://amazon-ecs-cli.s3.amazonaws.com/ecs-cli-linux-amd64-latest \
     && chmod +x /usr/local/bin/kubectl /usr/local/bin/aws-iam-authenticator /usr/local/bin/ecs-cli \
 # Configure SSM
@@ -98,13 +97,13 @@ RUN     n $NODE_VERSION && npm install --save-dev -g -f grunt && npm install --s
 #****************      END NODEJS     ****************************************************
 
 #**************** PYTHON *****************************************************
-ENV PYTHON_38_VERSION="3.8.1" \
+ENV PYTHON_38_VERSION="3.8.3" \
     PYTHON_PIP_VERSION="19.3.1"
 
 COPY tools/runtime_configs/python/$PYTHON_38_VERSION /root/.pyenv/plugins/python-build/share/python-build/$PYTHON_38_VERSION
 RUN set -ex \
-    && pyenv install $PYTHON_38_VERSION && rm -rf /tmp/* \
-    && pyenv global  $PYTHON_38_VERSION \
+    && env PYTHON_CONFIGURE_OPTS="--enable-shared" pyenv install $PYTHON_38_VERSION && rm -rf /tmp/* \
+    && pyenv global $PYTHON_38_VERSION \
     && pip3 install --no-cache-dir --upgrade --force-reinstall "pip==$PYTHON_PIP_VERSION" \
     && pip3 install --no-cache-dir --upgrade "PyYAML==5.1.2" \
     && pip3 install --no-cache-dir --upgrade setuptools wheel aws-sam-cli awscli boto3 pipenv virtualenv
@@ -130,10 +129,10 @@ RUN phpenv install $PHP_VERSION && rm -rf /tmp/* \
 ENV DOCKER_BUCKET="download.docker.com" \
     DOCKER_CHANNEL="stable" \
     DIND_COMMIT="3b5fac462d21ca164b3778647420016315289034" \
-    DOCKER_COMPOSE_VERSION="1.24.0" \
+    DOCKER_COMPOSE_VERSION="1.26.0" \
     SRC_DIR="/usr/src" \
-    DOCKER_SHA256="c3c8833e227b61fe6ce0bc5c17f97fa547035bef4ef17cf6601f30b0f20f4ce5" \
-    DOCKER_VERSION="19.03.3"
+    DOCKER_SHA256="0f4336378f61ed73ed55a356ac19e46699a995f2aff34323ba5874d131548b9e" \
+    DOCKER_VERSION="19.03.11"
 
 # Install Docker
 RUN set -ex \
