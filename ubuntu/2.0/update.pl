@@ -11,18 +11,18 @@ sub curl {
     my $cnt = 0;
     my $sleep = 1;
 RETRY:
-    my $ret = `curl -sSL --compressed "$url"`;
+    my $ret = `curl -sSL --compressed --connect-timeout 30 "$url"`;
     if ($?) {
         $cnt++;
-        if ($cnt > 10) {
+        if ($cnt > 100) {
             die "fail to get $url";
         }
         print STDERR "fail to get $url...\n";
 
         sleep $sleep;
         $sleep *= 2;
-        if ($sleep > 30) {
-            $sleep = 30;
+        if ($sleep > 10 * 60) {
+            $sleep = 10 * 60;
         }
         print STDERR "retry\n";
         goto RETRY;

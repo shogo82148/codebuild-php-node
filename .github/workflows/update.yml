@@ -4,6 +4,7 @@ on:
   pull_request:
     paths:
       - .github/workflows/update.yml
+      - "**/update.pl"
   schedule:
   - cron: "53 5 * * *"
 
