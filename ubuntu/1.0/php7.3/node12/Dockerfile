@@ -14,7 +14,7 @@ FROM ubuntu:18.04
 
 #****************        Utilities     ********************************************* 
 ENV PHP_VERSION="7.3.19" \
-    NODE_VERSION="12.18.1" \
+    NODE_VERSION="12.18.2" \
     NVM_VERSION="0.33.5" \
     DOCKER_VERSION="18.09.6" \
     DOCKER_SHA256="1f3f6774117765279fce64ee7f76abbb5f260264548cf80631d68fb2d795bb09" \
