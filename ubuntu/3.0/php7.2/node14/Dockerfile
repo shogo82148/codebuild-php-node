@@ -12,7 +12,7 @@
 FROM ubuntu:18.04
 
 #****************        Utilities     ********************************************* 
-ENV PHP_VERSION="7.2.31" \
+ENV PHP_VERSION="7.2.32" \
     NODE_VERSION="14.5.0" \
     DOCKER_VERSION="19.03.3" \
     DOCKER_SHA256="c3c8833e227b61fe6ce0bc5c17f97fa547035bef4ef17cf6601f30b0f20f4ce5" \
@@ -110,7 +110,7 @@ RUN set -ex \
 VOLUME /var/lib/docker
 
 #****************      PHP     ****************************************************
-ENV PHP_VERSION="7.2.31"
+ENV PHP_VERSION="7.2.32"
 
 RUN curl -L https://raw.githubusercontent.com/phpenv/phpenv-installer/master/bin/phpenv-installer | bash
 ENV PATH="/root/.phpenv/shims:/root/.phpenv/bin:$PATH"
