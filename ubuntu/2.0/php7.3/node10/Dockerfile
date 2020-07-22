@@ -13,7 +13,7 @@ FROM ubuntu:18.04
 
 #****************        Utilities     ********************************************* 
 ENV PHP_VERSION="7.3.20" \
-    NODE_VERSION="10.21.0" \
+    NODE_VERSION="10.22.0" \
     DOCKER_VERSION="18.09.6" \
     DOCKER_COMPOSE_VERSION="1.24.0" \
     DOCKER_BUCKET="download.docker.com" \    
