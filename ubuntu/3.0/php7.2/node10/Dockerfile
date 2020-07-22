@@ -13,7 +13,7 @@ FROM ubuntu:18.04
 
 #****************        Utilities     ********************************************* 
 ENV PHP_VERSION="7.2.32" \
-    NODE_VERSION="10.21.0" \
+    NODE_VERSION="10.22.0" \
     DOCKER_VERSION="19.03.3" \
     DOCKER_SHA256="c3c8833e227b61fe6ce0bc5c17f97fa547035bef4ef17cf6601f30b0f20f4ce5" \
     DOCKER_COMPOSE_VERSION="1.24.0" \
