@@ -12,7 +12,7 @@
 FROM amazonlinux:2
 
 #****************        Utilities     ********************************************* 
-ENV PHP_VERSION="7.4.8" \
+ENV PHP_VERSION="7.4.9" \
     NODE_VERSION="14.7.0" \
     JQ_VERSION="1.6" \
     JQ_SHA256="af986793a515d500ab2d35f8d2aecd656e764504b789b66d7e1a0b727a124c44" \
@@ -119,7 +119,7 @@ RUN set -ex \
 #**************** END PYTHON *****************************************************
 
 #****************      PHP     ****************************************************
-ENV PHP_VERSION="7.4.8"
+ENV PHP_VERSION="7.4.9"
 RUN curl -L https://raw.githubusercontent.com/phpenv/phpenv-installer/master/bin/phpenv-installer | bash
 ENV PATH="/root/.phpenv/shims:/root/.phpenv/bin:$PATH"
 COPY tools/runtime_configs/php/7.4 /root/.phpenv/plugins/php-build/share/php-build/definitions/$PHP_VERSION
