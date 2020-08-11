@@ -85,7 +85,7 @@ FROM tools AS runtimes
 
 #****************      NODEJS     ****************************************************
 
-ENV NODE_VERSION="14.7.0"
+ENV NODE_VERSION="14.8.0"
 
 RUN  n $NODE_VERSION && npm install --save-dev -g -f grunt && npm install --save-dev -g -f grunt-cli && npm install --save-dev -g -f webpack \
      && curl -sSL https://dl.yarnpkg.com/rpm/yarn.repo | tee /etc/yum.repos.d/yarn.repo \
