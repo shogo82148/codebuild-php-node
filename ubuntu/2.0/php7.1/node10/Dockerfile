@@ -12,9 +12,7 @@
 FROM ubuntu:18.04
 
 #****************        Utilities     ********************************************* 
-ENV PHP_VERSION="7.1.33" \
-    NODE_VERSION="10.22.0" \
-    DOCKER_VERSION="18.09.6" \
+ENV DOCKER_VERSION="18.09.6" \
     DOCKER_COMPOSE_VERSION="1.24.0" \
     DOCKER_BUCKET="download.docker.com" \    
     DOCKER_CHANNEL="stable" \
@@ -91,6 +89,10 @@ RUN curl -sS -o /usr/local/bin/aws-iam-authenticator https://amazon-eks.s3-us-we
     && curl -sS -o /usr/local/bin/ecs-cli https://amazon-ecs-cli.s3.amazonaws.com/ecs-cli-linux-amd64-latest \
     && chmod +x /usr/local/bin/kubectl /usr/local/bin/aws-iam-authenticator /usr/local/bin/ecs-cli
 
+# Configure SSH
+COPY ssh_config /root/.ssh/config
+COPY dockerd-entrypoint.sh /usr/local/bin/
+
 #**************** PYTHON *****************************************************
 ENV PYTHON_38_VERSION="3.8.1" \
     PYTHON_PIP_VERSION="19.3.1"
@@ -107,6 +109,21 @@ RUN set -ex \
 
 VOLUME /var/lib/docker
 
+#****************      NODEJS     ****************************************************
+
+ENV NODE_VERSION="10.22.0" \
+    N_SRC_DIR="$SRC_DIR/n"
+
+RUN git clone https://github.com/tj/n $N_SRC_DIR \
+    && cd $N_SRC_DIR && make install \
+    && n $NODE_VERSION && npm install --save-dev -g --no-bin-links grunt && npm install --save-dev -g grunt-cli && npm install --save-dev -g webpack \
+    && curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
+    && echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list \
+    && apt-get update && apt-get install -y --no-install-recommends yarn \
+    && cd / && rm -rf $N_SRC_DIR; 
+
+#****************      END NODEJS     ****************************************************
+
 #****************      PHP     ****************************************************
 ENV PHP_VERSION="7.1.33"
 
@@ -119,28 +136,7 @@ RUN phpenv install $PHP_VERSION && rm -rf /tmp/* \
 # Install Composer globally
     && curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer
 #****************      END PHP     ****************************************************
- 
-# Install Composer globally
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer
-#****************      END PHP     ****************************************************
 
-#****************      NODEJS     ****************************************************
-
-ENV N_SRC_DIR="$SRC_DIR/n"
-
-RUN git clone https://github.com/tj/n $N_SRC_DIR \
-    && cd $N_SRC_DIR && make install \
-    && n $NODE_VERSION && npm install --save-dev -g --no-bin-links grunt && npm install --save-dev -g grunt-cli && npm install --save-dev -g webpack \
-    && curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
-    && echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list \
-    && apt-get update && apt-get install -y --no-install-recommends yarn \
-    && cd / && rm -rf $N_SRC_DIR; 
-
-#****************      END NODEJS     ****************************************************
-
-# Configure SSH
-COPY ssh_config /root/.ssh/config
 COPY runtimes.yml /codebuild/image/config/runtimes.yml
-COPY dockerd-entrypoint.sh /usr/local/bin/
 
 ENTRYPOINT ["dockerd-entrypoint.sh"]

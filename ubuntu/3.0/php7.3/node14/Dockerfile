@@ -12,9 +12,7 @@
 FROM ubuntu:18.04
 
 #****************        Utilities     ********************************************* 
-ENV PHP_VERSION="7.3.21" \
-    NODE_VERSION="14.9.0" \
-    DOCKER_VERSION="19.03.3" \
+ENV DOCKER_VERSION="19.03.3" \
     DOCKER_SHA256="c3c8833e227b61fe6ce0bc5c17f97fa547035bef4ef17cf6601f30b0f20f4ce5" \
     DOCKER_COMPOSE_VERSION="1.24.0" \
     DOCKER_BUCKET="download.docker.com" \    
@@ -91,6 +89,10 @@ RUN curl -sS -o /usr/local/bin/aws-iam-authenticator https://amazon-eks.s3-us-we
     && curl -sS -o /usr/local/bin/ecs-cli https://amazon-ecs-cli.s3.amazonaws.com/ecs-cli-linux-amd64-latest \
     && chmod +x /usr/local/bin/kubectl /usr/local/bin/aws-iam-authenticator /usr/local/bin/ecs-cli
 
+# Configure SSH
+COPY ssh_config /root/.ssh/config
+COPY dockerd-entrypoint.sh /usr/local/bin/
+
 #**************** PYTHON *****************************************************
 ENV PYTHON_38_VERSION="3.8.1" \
     PYTHON_PIP_VERSION="19.3.1"
@@ -109,22 +111,10 @@ RUN set -ex \
 
 VOLUME /var/lib/docker
 
-#****************      PHP     ****************************************************
-ENV PHP_VERSION="7.3.21"
-
-RUN curl -L https://raw.githubusercontent.com/phpenv/phpenv-installer/master/bin/phpenv-installer | bash
-ENV PATH="/root/.phpenv/shims:/root/.phpenv/bin:$PATH"
-COPY tools/runtime_configs/php/7.3 /root/.phpenv/plugins/php-build/share/php-build/definitions/$PHP_VERSION
-RUN phpenv install $PHP_VERSION && rm -rf /tmp/* \
-    && phpenv global $PHP_VERSION \
-    && ( echo "memory_limit = 1G;" >> "/root/.phpenv/versions/$PHP_VERSION/etc/conf.d/memory.ini" ) \
-# Install Composer globally
-    && curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer
-#****************      END PHP     ****************************************************
-
 #****************      NODEJS     ****************************************************
 
-ENV N_SRC_DIR="$SRC_DIR/n"
+ENV NODE_VERSION="14.9.0" \
+    N_SRC_DIR="$SRC_DIR/n"
 
 RUN git clone https://github.com/tj/n $N_SRC_DIR \
     && cd $N_SRC_DIR && make install \
@@ -136,9 +126,19 @@ RUN git clone https://github.com/tj/n $N_SRC_DIR \
 
 #****************      END NODEJS     ****************************************************
 
-# Configure SSH
-COPY ssh_config /root/.ssh/config
+#****************      PHP     ****************************************************
+ENV PHP_VERSION="7.3.22"
+
+RUN curl -L https://raw.githubusercontent.com/phpenv/phpenv-installer/master/bin/phpenv-installer | bash
+ENV PATH="/root/.phpenv/shims:/root/.phpenv/bin:$PATH"
+COPY tools/runtime_configs/php/7.3 /root/.phpenv/plugins/php-build/share/php-build/definitions/$PHP_VERSION
+RUN phpenv install $PHP_VERSION && rm -rf /tmp/* \
+    && phpenv global $PHP_VERSION \
+    && ( echo "memory_limit = 1G;" >> "/root/.phpenv/versions/$PHP_VERSION/etc/conf.d/memory.ini" ) \
+# Install Composer globally
+    && curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer
+#****************      END PHP     ****************************************************
+
 COPY runtimes.yml /codebuild/image/config/runtimes.yml
-COPY dockerd-entrypoint.sh /usr/local/bin/
 
 ENTRYPOINT ["dockerd-entrypoint.sh"]

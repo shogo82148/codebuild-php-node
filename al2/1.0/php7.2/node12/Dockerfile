@@ -12,9 +12,7 @@
 FROM amazonlinux:2
 
 #****************        Utilities     ********************************************* 
-ENV PHP_VERSION="7.2.33" \
-    NODE_VERSION="12.18.3" \
-    JQ_VERSION="1.6" \
+ENV JQ_VERSION="1.6" \
     JQ_SHA256="af986793a515d500ab2d35f8d2aecd656e764504b789b66d7e1a0b727a124c44" \
     DOCKER_VERSION="18.09.6" \
     DOCKER_SHA256="1f3f6774117765279fce64ee7f76abbb5f260264548cf80631d68fb2d795bb09" \
@@ -97,8 +95,6 @@ VOLUME /var/lib/docker
 # Configure SSH
 COPY ssh_config /root/.ssh/config
 
-COPY runtimes.yml /codebuild/image/config/runtimes.yml
-
 COPY dockerd-entrypoint.sh /usr/local/bin/
 
 #**************** PYTHON *****************************************************
@@ -118,21 +114,10 @@ RUN set -ex \
 
 #**************** END PYTHON *****************************************************
 
-#****************      PHP     ****************************************************
-ENV PHP_VERSION="7.2.33"
-RUN curl -L https://raw.githubusercontent.com/phpenv/phpenv-installer/master/bin/phpenv-installer | bash
-ENV PATH="/root/.phpenv/shims:/root/.phpenv/bin:$PATH"
-COPY tools/runtime_configs/php/7.2 /root/.phpenv/plugins/php-build/share/php-build/definitions/$PHP_VERSION
-RUN phpenv install $PHP_VERSION && rm -rf /tmp/* \
-    && phpenv global $PHP_VERSION \
-    && ( echo "memory_limit = 1G;" >> "/root/.phpenv/versions/$PHP_VERSION/etc/conf.d/memory.ini" ) \
-# Install Composer globally
-    && curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer
-#****************      END PHP     ****************************************************
-
 #****************      NODEJS     ****************************************************
 
-ENV N_SRC_DIR="$SRC_DIR/n"
+ENV NODE_VERSION="12.18.3" \
+    N_SRC_DIR="$SRC_DIR/n"
 
 RUN git clone https://github.com/tj/n $N_SRC_DIR \
     && cd $N_SRC_DIR && make install \
@@ -146,5 +131,19 @@ RUN git clone https://github.com/tj/n $N_SRC_DIR \
     && yum clean all
 
 #****************      END NODEJS     ****************************************************
+
+#****************      PHP     ****************************************************
+ENV PHP_VERSION="7.2.33"
+RUN curl -L https://raw.githubusercontent.com/phpenv/phpenv-installer/master/bin/phpenv-installer | bash
+ENV PATH="/root/.phpenv/shims:/root/.phpenv/bin:$PATH"
+COPY tools/runtime_configs/php/7.2 /root/.phpenv/plugins/php-build/share/php-build/definitions/$PHP_VERSION
+RUN phpenv install $PHP_VERSION && rm -rf /tmp/* \
+    && phpenv global $PHP_VERSION \
+    && ( echo "memory_limit = 1G;" >> "/root/.phpenv/versions/$PHP_VERSION/etc/conf.d/memory.ini" ) \
+# Install Composer globally
+    && curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer
+#****************      END PHP     ****************************************************
+
+COPY runtimes.yml /codebuild/image/config/runtimes.yml
 
 ENTRYPOINT ["dockerd-entrypoint.sh"]
