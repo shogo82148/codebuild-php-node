@@ -1,16 +1,16 @@
-name: standard-4.0
+name: amazonlinux2-1.0
 
 on:
   push:
     paths:
-      - ubuntu/4.0/**/*
-      - .github/workflows/standard-4.0.yml
+      - al2/1.0/*/*/*
+      - .github/workflows/amazonlinux-1.0.yml
     branches:
       - master
   pull_request:
     paths:
-      - ubuntu/4.0/**/*
-      - .github/workflows/standard-4.0.yml
+      - al2/1.0/*/*/*
+      - .github/workflows/amazonlinux-1.0.yml
 
 jobs:
   build:
@@ -19,7 +19,7 @@ jobs:
       - uses: actions/checkout@v2
       - name: Build the Docker image
         run: |
-          ./.github/build.sh ubuntu standard 4.0
+          ./.github/build.sh al2 amazonlinux2 1.0
         env:
           USERNAME: ${{ secrets.username }}
           PASSWORD: ${{ secrets.password }}

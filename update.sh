@@ -40,13 +40,13 @@ done
 
 for AL2 in 3.0 2.0 1.0
 do
-    echo \# amazonlinux2-x86_64-standard $AL2 based >> README.md
+    echo \# amazonlinux2-x86_64-amazonlinux2 $AL2 based >> README.md
     for PHP in 7.4 7.3 7.2 7.1
     do
         for NODE in 14 12 10
         do
         (
-            echo docker pull shogo82148/codebuild-php-node:php$PHP-node$NODE-al2-$AL2 >> README.md
+            echo docker pull shogo82148/codebuild-php-node:php$PHP-node$NODE-amazonlinux2-$AL2 >> README.md
             cd "al2/$AL2" && \
             echo updating "php$PHP" "node$NODE" "amazonlinux2-$AL2" >&2 && \
             ./update.pl "$PHP" "$NODE"

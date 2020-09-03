@@ -1,4 +1,4 @@
-FROM amazonlinux:2 AS core
+FROM amazonlinux:2
 
 ENV EPEL_REPO="https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm" \
     JQ_VERSION="1.6" \
@@ -36,8 +36,6 @@ RUN useradd codebuild-user
 
 #=======================End of layer: core  =================
 
-FROM core AS tools
-
 # Install Git
 RUN set -ex \
    && GIT_VERSION=2.27.0 \
@@ -64,6 +62,11 @@ RUN yum install -y https://ec2-downloads-windows.s3.amazonaws.com/SSMAgent/lates
     && rm -rf /var/cache/yum/* \
     && yum clean all
 
+# Configure SSH
+COPY ssh_config /root/.ssh/config
+COPY dockerd-entrypoint.sh /usr/local/bin/
+COPY amazon-ssm-agent.json          /etc/amazon/ssm/
+
 # Install env tools for runtimes
 
 ##nodejs
@@ -81,21 +84,6 @@ ENV PATH="/root/.phpenv/shims:/root/.phpenv/bin:$PATH"
 
 #=======================End of layer: tools  =================
 
-FROM tools AS runtimes
-
-#****************      NODEJS     ****************************************************
-
-ENV NODE_VERSION="14.9.0"
-
-RUN  n $NODE_VERSION && npm install --save-dev -g -f grunt && npm install --save-dev -g -f grunt-cli && npm install --save-dev -g -f webpack \
-     && curl -sSL https://dl.yarnpkg.com/rpm/yarn.repo | tee /etc/yum.repos.d/yarn.repo \
-     && rpm --import https://dl.yarnpkg.com/rpm/pubkey.gpg \
-     && yum install -y yarn \
-     && yarn --version \
-     && cd / && rm -rf $N_SRC_DIR; rm -rf /tmp/*
-
-#****************      END NODEJS     ****************************************************
-
 #**************** PYTHON *****************************************************
 #Python 3.8
 ENV PYTHON_38_VERSION="3.8.3" \
@@ -110,16 +98,6 @@ RUN set -ex \
     && pip3 install --no-cache-dir --upgrade setuptools wheel aws-sam-cli awscli boto3 pipenv virtualenv
 
 #**************** END PYTHON *****************************************************
-
-#****************      PHP     ****************************************************
-ENV PHP_VERSION="7.2.33"
-COPY tools/runtime_configs/php/7.2 /root/.phpenv/plugins/php-build/share/php-build/definitions/$PHP_VERSION
-RUN phpenv install $PHP_VERSION && rm -rf /tmp/* \
-    && phpenv global $PHP_VERSION \
-    && ( echo "memory_limit = 1G;" >> "/root/.phpenv/versions/$PHP_VERSION/etc/conf.d/memory.ini" ) \
-# Install Composer globally
-    && curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer
-#****************      END PHP     ****************************************************
 
 #Docker 19
 ENV DOCKER_BUCKET="download.docker.com" \
@@ -149,15 +127,30 @@ RUN set -ex \
     && docker-compose version
 
 #===================END of runtimes ==============
-FROM runtimes AS al2_v3
 
-# Configure SSH
-COPY ssh_config /root/.ssh/config
+#****************      NODEJS     ****************************************************
+
+ENV NODE_VERSION="14.9.0"
+
+RUN  n $NODE_VERSION && npm install --save-dev -g -f grunt && npm install --save-dev -g -f grunt-cli && npm install --save-dev -g -f webpack \
+     && curl -sSL https://dl.yarnpkg.com/rpm/yarn.repo | tee /etc/yum.repos.d/yarn.repo \
+     && rpm --import https://dl.yarnpkg.com/rpm/pubkey.gpg \
+     && yum install -y yarn \
+     && yarn --version \
+     && cd / && rm -rf $N_SRC_DIR; rm -rf /tmp/*
+
+#****************      END NODEJS     ****************************************************
+
+#****************      PHP     ****************************************************
+ENV PHP_VERSION="7.2.33"
+COPY tools/runtime_configs/php/7.2 /root/.phpenv/plugins/php-build/share/php-build/definitions/$PHP_VERSION
+RUN phpenv install $PHP_VERSION && rm -rf /tmp/* \
+    && phpenv global $PHP_VERSION \
+    && ( echo "memory_limit = 1G;" >> "/root/.phpenv/versions/$PHP_VERSION/etc/conf.d/memory.ini" ) \
+# Install Composer globally
+    && curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer
+#****************      END PHP     ****************************************************
+
 COPY runtimes.yml /codebuild/image/config/runtimes.yml
-COPY dockerd-entrypoint.sh /usr/local/bin/
-COPY amazon-ssm-agent.json          /etc/amazon/ssm/
 
 ENTRYPOINT ["dockerd-entrypoint.sh"]
-
-#=======================End of layer: al2_v3  =================
-

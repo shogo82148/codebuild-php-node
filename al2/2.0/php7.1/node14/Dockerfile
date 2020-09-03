@@ -12,8 +12,6 @@
 FROM amazonlinux:2
 
 ENV PYTHON_VERSION="3.8.0" \
- PHP_VERSION="7.1.33" \
- NODE_VERSION="14.9.0" \
  JQ_VERSION="1.6" \
  JQ_SHA256="af986793a515d500ab2d35f8d2aecd656e764504b789b66d7e1a0b727a124c44" \
  DOCKER_VERSION="19.03.1" \
@@ -102,8 +100,6 @@ VOLUME /var/lib/docker
 # Configure SSH
 COPY ssh_config /root/.ssh/config
 
-COPY runtimes.yml /codebuild/image/config/runtimes.yml
-
 COPY dockerd-entrypoint.sh /usr/local/bin/
 
 #**************** PYTHON *****************************************************
@@ -120,6 +116,24 @@ RUN set -ex \
     && pip3 install --no-cache-dir --upgrade setuptools wheel aws-sam-cli awscli boto3 pipenv virtualenv
 #**************** END PYTHON *****************************************************
 
+#****************      NODEJS     ****************************************************
+
+ENV NODE_VERSION="14.9.0" \
+    N_SRC_DIR="$SRC_DIR/n"
+
+RUN git clone https://github.com/tj/n $N_SRC_DIR \
+    && cd $N_SRC_DIR && make install \
+    && n $NODE_VERSION && npm install --save-dev -g --no-bin-links grunt && npm install --save-dev -g grunt-cli && npm install --save-dev -g webpack \
+    && curl -sSL https://dl.yarnpkg.com/rpm/yarn.repo | tee /etc/yum.repos.d/yarn.repo \
+    && rpm --import https://dl.yarnpkg.com/rpm/pubkey.gpg \
+    && yum install -y yarn \
+    && yarn --version \
+    && cd / && rm -rf $N_SRC_DIR \
+    && rm -rf /var/cache/yum/* \
+    && yum clean all
+
+#****************      END NODEJS     ****************************************************
+
 #****************      PHP     ****************************************************
 ENV PHP_VERSION="7.1.33"
 
@@ -133,21 +147,6 @@ RUN phpenv install $PHP_VERSION && rm -rf /tmp/* \
     && curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer
 #****************      END PHP     ****************************************************
 
-#****************      NODEJS     ****************************************************
-
- ENV N_SRC_DIR="$SRC_DIR/n"
-
- RUN git clone https://github.com/tj/n $N_SRC_DIR \
-    && cd $N_SRC_DIR && make install \
-    && n $NODE_VERSION && npm install --save-dev -g --no-bin-links grunt && npm install --save-dev -g grunt-cli && npm install --save-dev -g webpack \
-    && curl -sSL https://dl.yarnpkg.com/rpm/yarn.repo | tee /etc/yum.repos.d/yarn.repo \
-    && rpm --import https://dl.yarnpkg.com/rpm/pubkey.gpg \
-    && yum install -y yarn \
-    && yarn --version \
-    && cd / && rm -rf $N_SRC_DIR \
-    && rm -rf /var/cache/yum/* \
-    && yum clean all
-
-#****************      END NODEJS     ****************************************************
+COPY runtimes.yml /codebuild/image/config/runtimes.yml
 
 ENTRYPOINT ["dockerd-entrypoint.sh"]

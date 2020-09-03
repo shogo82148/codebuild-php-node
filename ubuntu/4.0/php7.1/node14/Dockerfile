@@ -1,4 +1,4 @@
-FROM ubuntu:18.04 AS core
+FROM ubuntu:18.04
 
 ENV DEBIAN_FRONTEND="noninteractive" \
     JQ_VERSION="1.6" \
@@ -49,9 +49,6 @@ RUN useradd codebuild-user
 
 #=======================End of layer: core  =================
 
-
-FROM core AS tools
-
 RUN set -ex \
 # AWS Tools
 # https://docs.aws.amazon.com/eks/latest/userguide/install-aws-iam-authenticator.html https://docs.aws.amazon.com/AmazonECS/latest/developerguide/ECS_CLI_installation.html
@@ -64,6 +61,11 @@ RUN set -ex \
     && cd /tmp/ssm \
     && wget https://ec2-downloads-windows.s3.amazonaws.com/SSMAgent/latest/debian_amd64/amazon-ssm-agent.deb \
     && dpkg -i amazon-ssm-agent.deb
+
+# Configure SSH
+COPY ssh_config /root/.ssh/config
+COPY dockerd-entrypoint.sh /usr/local/bin/
+COPY amazon-ssm-agent.json          /etc/amazon/ssm/
 
 # Install env tools for runtimes
 
@@ -82,19 +84,6 @@ RUN curl -L https://raw.githubusercontent.com/phpenv/phpenv-installer/master/bin
 ENV PATH="/root/.phpenv/shims:/root/.phpenv/bin:$PATH"
 
 #=======================End of layer: tools  =================
-FROM tools AS runtimes
-
-#****************      NODEJS     ****************************************************
-
-ENV NODE_VERSION="14.9.0"
-RUN     n $NODE_VERSION && npm install --save-dev -g -f grunt && npm install --save-dev -g -f grunt-cli && npm install --save-dev -g -f webpack \
-     && curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
-     && echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list \
-     && apt-get update && apt-get install -y --no-install-recommends yarn \
-     && yarn --version \
-     && cd / && rm -rf $N_SRC_DIR;rm -rf /tmp/*
-
-#****************      END NODEJS     ****************************************************
 
 #**************** PYTHON *****************************************************
 ENV PYTHON_38_VERSION="3.8.3" \
@@ -109,19 +98,6 @@ RUN set -ex \
     && pip3 install --no-cache-dir --upgrade setuptools wheel aws-sam-cli awscli boto3 pipenv virtualenv
 
 #**************** END PYTHON *****************************************************
-
-#****************      PHP     ****************************************************
-ENV PHP_VERSION="7.1.33"
-
-RUN curl -L https://raw.githubusercontent.com/phpenv/phpenv-installer/master/bin/phpenv-installer | bash
-ENV PATH="/root/.phpenv/shims:/root/.phpenv/bin:$PATH"
-COPY tools/runtime_configs/php/7.1 /root/.phpenv/plugins/php-build/share/php-build/definitions/$PHP_VERSION
-RUN phpenv install $PHP_VERSION && rm -rf /tmp/* \
-    && phpenv global $PHP_VERSION \
-    && ( echo "memory_limit = 1G;" >> "/root/.phpenv/versions/$PHP_VERSION/etc/conf.d/memory.ini" ) \
-# Install Composer globally
-    && curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer
-#****************      END PHP     ****************************************************
 
 #=======================End of layer: runtimes  =================
 
@@ -155,15 +131,31 @@ RUN set -ex \
 VOLUME /var/lib/docker
 #*********************** END  DOCKER  ****************************
 
-#=======================End of layer: runtimes  =================
-FROM runtimes AS std_v4
+#****************      NODEJS     ****************************************************
 
-# Configure SSH
-COPY ssh_config /root/.ssh/config
+ENV NODE_VERSION="14.9.0"
+RUN     n $NODE_VERSION && npm install --save-dev -g -f grunt && npm install --save-dev -g -f grunt-cli && npm install --save-dev -g -f webpack \
+     && curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
+     && echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list \
+     && apt-get update && apt-get install -y --no-install-recommends yarn \
+     && yarn --version \
+     && cd / && rm -rf $N_SRC_DIR;rm -rf /tmp/*
+
+#****************      END NODEJS     ****************************************************
+
+#****************      PHP     ****************************************************
+ENV PHP_VERSION="7.1.33"
+
+RUN curl -L https://raw.githubusercontent.com/phpenv/phpenv-installer/master/bin/phpenv-installer | bash
+ENV PATH="/root/.phpenv/shims:/root/.phpenv/bin:$PATH"
+COPY tools/runtime_configs/php/7.1 /root/.phpenv/plugins/php-build/share/php-build/definitions/$PHP_VERSION
+RUN phpenv install $PHP_VERSION && rm -rf /tmp/* \
+    && phpenv global $PHP_VERSION \
+    && ( echo "memory_limit = 1G;" >> "/root/.phpenv/versions/$PHP_VERSION/etc/conf.d/memory.ini" ) \
+# Install Composer globally
+    && curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer
+#****************      END PHP     ****************************************************
+
 COPY runtimes.yml /codebuild/image/config/runtimes.yml
-COPY dockerd-entrypoint.sh /usr/local/bin/
-COPY amazon-ssm-agent.json          /etc/amazon/ssm/
 
 ENTRYPOINT ["dockerd-entrypoint.sh"]
-
-#=======================END of STD:4.0  =================
