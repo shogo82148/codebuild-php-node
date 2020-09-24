@@ -7,7 +7,7 @@ BASE_IMAGE=$2
 BASE_IMAGE_VERSION=$3
 ROOT=$(cd "$(dirname "$0")" && cd .. && pwd)
 
-for PHP in 7.4 7.3 7.2 7.1
+for PHP in 7.4 7.3 7.2
 do
     for NODE in 14 12 10
     do
