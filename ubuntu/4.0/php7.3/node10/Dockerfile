@@ -144,7 +144,7 @@ RUN     n $NODE_VERSION && npm install --save-dev -g -f grunt && npm install --s
 #****************      END NODEJS     ****************************************************
 
 #****************      PHP     ****************************************************
-ENV PHP_VERSION="7.3.22"
+ENV PHP_VERSION="7.3.23"
 
 RUN curl -L https://raw.githubusercontent.com/phpenv/phpenv-installer/master/bin/phpenv-installer | bash
 ENV PATH="/root/.phpenv/shims:/root/.phpenv/bin:$PATH"
