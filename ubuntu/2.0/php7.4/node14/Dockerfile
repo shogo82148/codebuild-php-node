@@ -111,7 +111,7 @@ VOLUME /var/lib/docker
 
 #****************      NODEJS     ****************************************************
 
-ENV NODE_VERSION="14.13.1" \
+ENV NODE_VERSION="14.14.0" \
     N_SRC_DIR="$SRC_DIR/n"
 
 RUN git clone https://github.com/tj/n $N_SRC_DIR \
