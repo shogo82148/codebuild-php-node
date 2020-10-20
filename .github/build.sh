@@ -16,7 +16,7 @@ do
         PACKAGE=docker.pkg.github.com/$GITHUB_REPOSITORY/php$PHP-node$NODE-amazonlinux2-$BASE_IMAGE_VERSION:latest
         docker build "$ROOT/$WORDDIR/$BASE_IMAGE_VERSION/php$PHP/node$NODE" --tag "$TAG"
 
-        if [[ ${GITHUB_REF} = 'refs/heads/master' ]]; then
+        if [[ ${GITHUB_REF} = 'refs/heads/main' ]]; then
             # Publish to the Docker Hub
             printenv PASSWORD | docker login -u "$USERNAME" --password-stdin
             docker push "$TAG"
