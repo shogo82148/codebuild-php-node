@@ -142,7 +142,7 @@ RUN  n $NODE_VERSION && npm install --save-dev -g -f grunt && npm install --save
 #****************      END NODEJS     ****************************************************
 
 #****************      PHP     ****************************************************
-ENV PHP_VERSION="7.3.23"
+ENV PHP_VERSION="7.3.24"
 COPY tools/runtime_configs/php/7.3 /root/.phpenv/plugins/php-build/share/php-build/definitions/$PHP_VERSION
 RUN phpenv install $PHP_VERSION && rm -rf /tmp/* \
     && phpenv global $PHP_VERSION \
