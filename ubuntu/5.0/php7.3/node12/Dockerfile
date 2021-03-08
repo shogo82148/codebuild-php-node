@@ -43,7 +43,7 @@ RUN set -ex \
         apt-utils asciidoc autoconf automake build-essential bzip2 \
         bzr curl cvs cvsps dirmngr docbook-xml docbook-xsl dpkg-dev \
         e2fsprogs expect fakeroot file g++ gcc gettext gettext-base \
-        git groff gzip imagemagick iptables less libapr1 libaprutil1 \
+        groff gzip iptables less libapr1 libaprutil1 \
         libargon2-0-dev libbz2-dev libc6-dev libcurl4-openssl-dev \
         libdb-dev libdbd-sqlite3-perl libdbi-perl libdpkg-perl \
         libedit-dev liberror-perl libevent-dev libffi-dev libgeoip-dev \
@@ -54,10 +54,10 @@ RUN set -ex \
         libsvn1 libsvn-perl libtcl8.6 libtidy-dev libtimedate-perl \
         libtool libwebp-dev libxml2-dev libxml2-utils libxslt1-dev \
         libyaml-dev libyaml-perl llvm locales make mercurial mlocate \
-        netbase openssl patch pkg-config procps python-bzrlib \
-        python-configobj python-openssl rsync sgml-base sgml-data subversion \
+        netbase openssl patch pkg-config procps python3-configobj \
+        python-openssl rsync sgml-base sgml-data \
         tar tcl tcl8.6 tk tk-dev unzip wget xfsprogs xml-core xmlto xsltproc \
-        libzip4 libzip-dev vim xvfb xz-utils zip zlib1g-dev \
+        libzip5 libzip-dev vim xvfb xz-utils zip zlib1g-dev \
     && rm -rf /var/lib/apt/lists/* \
     && apt-get clean \
     && wget https://github.com/stedolan/jq/releases/download/jq-${JQ_VERSION}/jq-linux64 -O /usr/local/bin/jq \
