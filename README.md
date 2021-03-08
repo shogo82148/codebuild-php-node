@@ -105,7 +105,7 @@ docker pull shogo82148/codebuild-php-node:php7.2-node10-amazonlinux2-1.0
 
 ```
 
-PHP 7.1 images are no longer mantained.
+PHP 7.1 images are no longer maintained.
 They remain in this repository as a reference for the contents of these images.
 
 ### An Example of CloudFormation Template for Creating CodeBuild Project
