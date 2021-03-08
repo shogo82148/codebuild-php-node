@@ -59,7 +59,7 @@ done
 cat <<'EOS' >> README.md
 ```
 
-PHP 7.1 images are no longer mantained.
+PHP 7.1 images are no longer maintained.
 They remain in this repository as a reference for the contents of these images.
 
 ### An Example of CloudFormation Template for Creating CodeBuild Project
@@ -72,7 +72,7 @@ They remain in this repository as a reference for the contents of these images.
         Type: NO_ARTIFACTS
       Environment:
         ComputeType: BUILD_GENERAL1_SMALL
-        Image: shogo82148/codebuild-php-node:php7.4-node14-standard-4.0
+        Image: shogo82148/codebuild-php-node:php8.0-node14-standard-5.0
         Type: LINUX_CONTAINER
       ServiceRole: !GetAtt CodeBuildRole.Arn
       Source:
