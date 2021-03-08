@@ -130,7 +130,7 @@ RUN set -ex \
 
 #****************      NODEJS     ****************************************************
 
-ENV NODE_VERSION="12.20.1"
+ENV NODE_VERSION="12.21.0"
 
 RUN  n $NODE_VERSION && npm install --save-dev -g -f grunt && npm install --save-dev -g -f grunt-cli && npm install --save-dev -g -f webpack \
      && curl -sSL https://dl.yarnpkg.com/rpm/yarn.repo | tee /etc/yum.repos.d/yarn.repo \
@@ -142,7 +142,7 @@ RUN  n $NODE_VERSION && npm install --save-dev -g -f grunt && npm install --save
 #****************      END NODEJS     ****************************************************
 
 #****************      PHP     ****************************************************
-ENV PHP_VERSION="7.4.15"
+ENV PHP_VERSION="7.4.16"
 COPY tools/runtime_configs/php/7.4 /root/.phpenv/plugins/php-build/share/php-build/definitions/$PHP_VERSION
 RUN phpenv install $PHP_VERSION && rm -rf /tmp/* \
     && phpenv global $PHP_VERSION \
