@@ -23,7 +23,7 @@ EOS
 for STANDARD in 4.0 3.0 2.0 1.0
 do
     echo \# standard $STANDARD based >> README.md
-    for PHP in 7.4 7.3 7.2
+    for PHP in 8.0 7.4 7.3 7.2
     do
         for NODE in 14 12 10
         do
@@ -41,7 +41,7 @@ done
 for AL2 in 3.0 2.0 1.0
 do
     echo \# amazonlinux2-x86_64-amazonlinux2 $AL2 based >> README.md
-    for PHP in 7.4 7.3 7.2
+    for PHP in 8.0 7.4 7.3 7.2
     do
         for NODE in 14 12 10
         do
