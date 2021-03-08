@@ -20,7 +20,7 @@ Docker Pull Command:
 ```bash
 EOS
 
-for STANDARD in 4.0 3.0 2.0 1.0
+for STANDARD in 5.0 4.0 3.0 2.0 1.0
 do
     echo \# standard $STANDARD based >> README.md
     for PHP in 8.0 7.4 7.3 7.2

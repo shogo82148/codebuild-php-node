@@ -15,6 +15,17 @@ Pre-build images are available on DockerHub.
 Docker Pull Command:
 
 ```bash
+# standard 5.0 based
+docker pull shogo82148/codebuild-php-node:php7.4-node14-standard-5.0
+docker pull shogo82148/codebuild-php-node:php7.4-node12-standard-5.0
+docker pull shogo82148/codebuild-php-node:php7.4-node10-standard-5.0
+docker pull shogo82148/codebuild-php-node:php7.3-node14-standard-5.0
+docker pull shogo82148/codebuild-php-node:php7.3-node12-standard-5.0
+docker pull shogo82148/codebuild-php-node:php7.3-node10-standard-5.0
+docker pull shogo82148/codebuild-php-node:php7.2-node14-standard-5.0
+docker pull shogo82148/codebuild-php-node:php7.2-node12-standard-5.0
+docker pull shogo82148/codebuild-php-node:php7.2-node10-standard-5.0
+
 # standard 4.0 based
 docker pull shogo82148/codebuild-php-node:php8.0-node14-standard-4.0
 docker pull shogo82148/codebuild-php-node:php8.0-node12-standard-4.0
