@@ -23,7 +23,7 @@ EOS
 for STANDARD in 5.0 4.0 3.0 2.0 1.0
 do
     echo \# standard $STANDARD based >> README.md
-    for PHP in 7.4 7.3 7.2
+    for PHP in 8.0 7.4 7.3 7.2
     do
         for NODE in 14 12 10
         do
@@ -41,7 +41,7 @@ done
 for AL2 in 3.0 2.0 1.0
 do
     echo \# amazonlinux2-x86_64-amazonlinux2 $AL2 based >> README.md
-    for PHP in 7.4 7.3 7.2
+    for PHP in 8.0 7.4 7.3 7.2
     do
         for NODE in 14 12 10
         do
@@ -59,7 +59,7 @@ done
 cat <<'EOS' >> README.md
 ```
 
-PHP 7.1 images are no longer mantained.
+PHP 7.1 images are no longer maintained.
 They remain in this repository as a reference for the contents of these images.
 
 ### An Example of CloudFormation Template for Creating CodeBuild Project
@@ -72,7 +72,7 @@ They remain in this repository as a reference for the contents of these images.
         Type: NO_ARTIFACTS
       Environment:
         ComputeType: BUILD_GENERAL1_SMALL
-        Image: shogo82148/codebuild-php-node:php7.4-node14-standard-4.0
+        Image: shogo82148/codebuild-php-node:php8.0-node14-standard-5.0
         Type: LINUX_CONTAINER
       ServiceRole: !GetAtt CodeBuildRole.Arn
       Source:

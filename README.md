@@ -16,6 +16,9 @@ Docker Pull Command:
 
 ```bash
 # standard 5.0 based
+docker pull shogo82148/codebuild-php-node:php8.0-node14-standard-5.0
+docker pull shogo82148/codebuild-php-node:php8.0-node12-standard-5.0
+docker pull shogo82148/codebuild-php-node:php8.0-node10-standard-5.0
 docker pull shogo82148/codebuild-php-node:php7.4-node14-standard-5.0
 docker pull shogo82148/codebuild-php-node:php7.4-node12-standard-5.0
 docker pull shogo82148/codebuild-php-node:php7.4-node10-standard-5.0
@@ -27,6 +30,9 @@ docker pull shogo82148/codebuild-php-node:php7.2-node12-standard-5.0
 docker pull shogo82148/codebuild-php-node:php7.2-node10-standard-5.0
 
 # standard 4.0 based
+docker pull shogo82148/codebuild-php-node:php8.0-node14-standard-4.0
+docker pull shogo82148/codebuild-php-node:php8.0-node12-standard-4.0
+docker pull shogo82148/codebuild-php-node:php8.0-node10-standard-4.0
 docker pull shogo82148/codebuild-php-node:php7.4-node14-standard-4.0
 docker pull shogo82148/codebuild-php-node:php7.4-node12-standard-4.0
 docker pull shogo82148/codebuild-php-node:php7.4-node10-standard-4.0
@@ -38,6 +44,9 @@ docker pull shogo82148/codebuild-php-node:php7.2-node12-standard-4.0
 docker pull shogo82148/codebuild-php-node:php7.2-node10-standard-4.0
 
 # standard 3.0 based
+docker pull shogo82148/codebuild-php-node:php8.0-node14-standard-3.0
+docker pull shogo82148/codebuild-php-node:php8.0-node12-standard-3.0
+docker pull shogo82148/codebuild-php-node:php8.0-node10-standard-3.0
 docker pull shogo82148/codebuild-php-node:php7.4-node14-standard-3.0
 docker pull shogo82148/codebuild-php-node:php7.4-node12-standard-3.0
 docker pull shogo82148/codebuild-php-node:php7.4-node10-standard-3.0
@@ -49,6 +58,9 @@ docker pull shogo82148/codebuild-php-node:php7.2-node12-standard-3.0
 docker pull shogo82148/codebuild-php-node:php7.2-node10-standard-3.0
 
 # standard 2.0 based
+docker pull shogo82148/codebuild-php-node:php8.0-node14-standard-2.0
+docker pull shogo82148/codebuild-php-node:php8.0-node12-standard-2.0
+docker pull shogo82148/codebuild-php-node:php8.0-node10-standard-2.0
 docker pull shogo82148/codebuild-php-node:php7.4-node14-standard-2.0
 docker pull shogo82148/codebuild-php-node:php7.4-node12-standard-2.0
 docker pull shogo82148/codebuild-php-node:php7.4-node10-standard-2.0
@@ -60,6 +72,9 @@ docker pull shogo82148/codebuild-php-node:php7.2-node12-standard-2.0
 docker pull shogo82148/codebuild-php-node:php7.2-node10-standard-2.0
 
 # standard 1.0 based
+docker pull shogo82148/codebuild-php-node:php8.0-node14-standard-1.0
+docker pull shogo82148/codebuild-php-node:php8.0-node12-standard-1.0
+docker pull shogo82148/codebuild-php-node:php8.0-node10-standard-1.0
 docker pull shogo82148/codebuild-php-node:php7.4-node14-standard-1.0
 docker pull shogo82148/codebuild-php-node:php7.4-node12-standard-1.0
 docker pull shogo82148/codebuild-php-node:php7.4-node10-standard-1.0
@@ -71,6 +86,9 @@ docker pull shogo82148/codebuild-php-node:php7.2-node12-standard-1.0
 docker pull shogo82148/codebuild-php-node:php7.2-node10-standard-1.0
 
 # amazonlinux2-x86_64-amazonlinux2 3.0 based
+docker pull shogo82148/codebuild-php-node:php8.0-node14-amazonlinux2-3.0
+docker pull shogo82148/codebuild-php-node:php8.0-node12-amazonlinux2-3.0
+docker pull shogo82148/codebuild-php-node:php8.0-node10-amazonlinux2-3.0
 docker pull shogo82148/codebuild-php-node:php7.4-node14-amazonlinux2-3.0
 docker pull shogo82148/codebuild-php-node:php7.4-node12-amazonlinux2-3.0
 docker pull shogo82148/codebuild-php-node:php7.4-node10-amazonlinux2-3.0
@@ -82,6 +100,9 @@ docker pull shogo82148/codebuild-php-node:php7.2-node12-amazonlinux2-3.0
 docker pull shogo82148/codebuild-php-node:php7.2-node10-amazonlinux2-3.0
 
 # amazonlinux2-x86_64-amazonlinux2 2.0 based
+docker pull shogo82148/codebuild-php-node:php8.0-node14-amazonlinux2-2.0
+docker pull shogo82148/codebuild-php-node:php8.0-node12-amazonlinux2-2.0
+docker pull shogo82148/codebuild-php-node:php8.0-node10-amazonlinux2-2.0
 docker pull shogo82148/codebuild-php-node:php7.4-node14-amazonlinux2-2.0
 docker pull shogo82148/codebuild-php-node:php7.4-node12-amazonlinux2-2.0
 docker pull shogo82148/codebuild-php-node:php7.4-node10-amazonlinux2-2.0
@@ -93,6 +114,9 @@ docker pull shogo82148/codebuild-php-node:php7.2-node12-amazonlinux2-2.0
 docker pull shogo82148/codebuild-php-node:php7.2-node10-amazonlinux2-2.0
 
 # amazonlinux2-x86_64-amazonlinux2 1.0 based
+docker pull shogo82148/codebuild-php-node:php8.0-node14-amazonlinux2-1.0
+docker pull shogo82148/codebuild-php-node:php8.0-node12-amazonlinux2-1.0
+docker pull shogo82148/codebuild-php-node:php8.0-node10-amazonlinux2-1.0
 docker pull shogo82148/codebuild-php-node:php7.4-node14-amazonlinux2-1.0
 docker pull shogo82148/codebuild-php-node:php7.4-node12-amazonlinux2-1.0
 docker pull shogo82148/codebuild-php-node:php7.4-node10-amazonlinux2-1.0
@@ -105,7 +129,7 @@ docker pull shogo82148/codebuild-php-node:php7.2-node10-amazonlinux2-1.0
 
 ```
 
-PHP 7.1 images are no longer mantained.
+PHP 7.1 images are no longer maintained.
 They remain in this repository as a reference for the contents of these images.
 
 ### An Example of CloudFormation Template for Creating CodeBuild Project
@@ -118,7 +142,7 @@ They remain in this repository as a reference for the contents of these images.
         Type: NO_ARTIFACTS
       Environment:
         ComputeType: BUILD_GENERAL1_SMALL
-        Image: shogo82148/codebuild-php-node:php7.4-node14-standard-4.0
+        Image: shogo82148/codebuild-php-node:php8.0-node14-standard-5.0
         Type: LINUX_CONTAINER
       ServiceRole: !GetAtt CodeBuildRole.Arn
       Source:

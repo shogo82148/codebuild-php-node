@@ -7,13 +7,13 @@ BASE_IMAGE=$2
 BASE_IMAGE_VERSION=$3
 ROOT=$(cd "$(dirname "$0")" && cd .. && pwd)
 
-for PHP in 7.4 7.3 7.2
+for PHP in 8.0 7.4 7.3 7.2
 do
     for NODE in 14 12 10
     do
         echo "::group::php$PHP-node$NODE"
         TAG=shogo82148/codebuild-php-node:php$PHP-node$NODE-$BASE_IMAGE-$BASE_IMAGE_VERSION
-        PACKAGE=docker.pkg.github.com/$GITHUB_REPOSITORY/php$PHP-node$NODE-amazonlinux2-$BASE_IMAGE_VERSION:latest
+        PACKAGE=docker.pkg.github.com/$GITHUB_REPOSITORY/php$PHP-node$NODE-$BASE_IMAGE-$BASE_IMAGE_VERSION:latest
         docker build "$ROOT/$WORDDIR/$BASE_IMAGE_VERSION/php$PHP/node$NODE" --tag "$TAG"
 
         if [[ ${GITHUB_REF} = 'refs/heads/main' ]]; then

@@ -1,0 +1,14 @@
+version: 0.1
+
+runtimes:
+  php:
+    versions:
+      8.0:
+        commands:
+          - echo "Installing PHP version 8.0 ..."
+  nodejs:
+    versions:
+      12:
+        commands:
+          - echo "Installing Node.js version 12.21.0 ..."
+          - n 12.21.0
