@@ -15,8 +15,8 @@ runtimes:
     versions:
       12:
         commands:
-          - echo "Installing Node.js version 12.21.0 ..."
-          - n 12.21.0
+          - echo "Installing Node.js version 12.22.0 ..."
+          - n 12.22.0
   docker:
     versions:
       18:
