@@ -10,5 +10,5 @@ runtimes:
     versions:
       10:
         commands:
-          - echo "Installing Node.js version 10.24.0 ..."
-          - n 10.24.0
+          - echo "Installing Node.js version 10.24.1 ..."
+          - n 10.24.1
