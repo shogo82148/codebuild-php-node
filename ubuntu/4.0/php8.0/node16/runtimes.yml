@@ -1,0 +1,21 @@
+version: 0.1
+
+runtimes:
+  php:
+    versions:
+      8.0:
+        commands:
+          - echo "Installing PHP version 8.0 ..."
+  nodejs:
+    versions:
+      16:
+        commands:
+          - echo "Installing Node.js version 16 ..."
+  docker:
+    versions:
+      18:
+        commands:
+          - echo "Using Docker 19"
+      19:
+        commands:
+          - echo "Using Docker 19"

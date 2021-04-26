@@ -1,0 +1,16 @@
+configure_option "--with-curl"
+configure_option "--with-libedit"
+configure_option "--with-password-argon2"
+configure_option "--with-pdo-pgsql"
+
+PHP_BUILD_EXTRA_MAKE_ARGUMENTS="-j4"
+
+# based on https://github.com/php-build/php-build/blob/master/share/php-build/definitions/7.3.0
+
+configure_option "--without-pear"
+configure_option "--with-gd"
+configure_option "--with-png-dir" "/usr"
+configure_option "--with-jpeg-dir" "/usr"
+configure_option "--enable-zip"
+
+install_package "https://php.shogo82148.com/distributions/php-7.3.27.tar.bz2"

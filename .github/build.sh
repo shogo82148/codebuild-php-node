@@ -9,7 +9,7 @@ ROOT=$(cd "$(dirname "$0")" && cd .. && pwd)
 
 for PHP in 8.0 7.4 7.3 7.2
 do
-    for NODE in 14 12 10
+    for NODE in 16 14 12 10
     do
         echo "::group::php$PHP-node$NODE"
         TAG=shogo82148/codebuild-php-node:php$PHP-node$NODE-$BASE_IMAGE-$BASE_IMAGE_VERSION

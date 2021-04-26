@@ -25,7 +25,7 @@ do
     echo \# standard $STANDARD based >> README.md
     for PHP in 8.0 7.4 7.3 7.2
     do
-        for NODE in 14 12 10
+        for NODE in 16 14 12 10
         do
         (
             echo docker pull shogo82148/codebuild-php-node:php$PHP-node$NODE-standard-$STANDARD >> README.md
@@ -43,7 +43,7 @@ do
     echo \# amazonlinux2-x86_64-amazonlinux2 $AL2 based >> README.md
     for PHP in 8.0 7.4 7.3 7.2
     do
-        for NODE in 14 12 10
+        for NODE in 16 14 12 10
         do
         (
             echo docker pull shogo82148/codebuild-php-node:php$PHP-node$NODE-amazonlinux2-$AL2 >> README.md
