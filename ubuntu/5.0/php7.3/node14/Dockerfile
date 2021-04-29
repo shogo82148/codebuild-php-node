@@ -133,7 +133,7 @@ RUN git clone https://github.com/tj/n $N_SRC_DIR \
 #****************      END NODEJS     ****************************************************
 
 #****************      PHP     ****************************************************
-ENV PHP_VERSION="7.3.27"
+ENV PHP_VERSION="7.3.28"
 
 RUN curl -L https://raw.githubusercontent.com/phpenv/phpenv-installer/master/bin/phpenv-installer | bash
 ENV PATH="/root/.phpenv/shims:/root/.phpenv/bin:$PATH"
