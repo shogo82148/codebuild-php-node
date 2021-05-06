@@ -127,7 +127,7 @@ ENV NODE_VERSION="16.1.0" \
 #****************      END NODEJS     ****************************************************
 
 #****************      PHP     ****************************************************
-ENV PHP_VERSION="7.4.18"
+ENV PHP_VERSION="7.4.19"
 
 RUN curl -L https://raw.githubusercontent.com/phpenv/phpenv-installer/master/bin/phpenv-installer | bash
 ENV PATH="/root/.phpenv/shims:/root/.phpenv/bin:$PATH"
