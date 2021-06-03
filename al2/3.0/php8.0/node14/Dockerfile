@@ -86,7 +86,7 @@ ENV PATH="/root/.phpenv/shims:/root/.phpenv/bin:$PATH"
 
 #**************** PYTHON *****************************************************
 #Python 3.8
-ENV PYTHON_38_VERSION="3.8.3" \
+ENV PYTHON_38_VERSION="3.8.10" \
     PYTHON_PIP_VERSION="19.3.1"
 
 COPY tools/runtime_configs/python/$PYTHON_38_VERSION /root/.pyenv/plugins/python-build/share/python-build/$PYTHON_38_VERSION
@@ -142,7 +142,7 @@ RUN  n $NODE_VERSION && npm install --save-dev -g -f grunt && npm install --save
 #****************      END NODEJS     ****************************************************
 
 #****************      PHP     ****************************************************
-ENV PHP_VERSION="8.0.6"
+ENV PHP_VERSION="8.0.7"
 COPY tools/runtime_configs/php/8.0 /root/.phpenv/plugins/php-build/share/php-build/definitions/$PHP_VERSION
 RUN phpenv install $PHP_VERSION && rm -rf /tmp/* \
     && phpenv global $PHP_VERSION \

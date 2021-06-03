@@ -99,7 +99,7 @@ COPY dockerd-entrypoint.sh /usr/local/bin/
 
 #**************** PYTHON *****************************************************
 #Python 3.7
-ENV PYTHON_37_VERSION="3.7.6" \
+ENV PYTHON_37_VERSION="3.7.10" \
     PYTHON_PIP_VERSION="19.3.1"
 
 RUN curl https://pyenv.run | bash
@@ -133,7 +133,7 @@ RUN git clone https://github.com/tj/n $N_SRC_DIR \
 #****************      END NODEJS     ****************************************************
 
 #****************      PHP     ****************************************************
-ENV PHP_VERSION="8.0.6"
+ENV PHP_VERSION="8.0.7"
 RUN curl -L https://raw.githubusercontent.com/phpenv/phpenv-installer/master/bin/phpenv-installer | bash
 ENV PATH="/root/.phpenv/shims:/root/.phpenv/bin:$PATH"
 COPY tools/runtime_configs/php/8.0 /root/.phpenv/plugins/php-build/share/php-build/definitions/$PHP_VERSION

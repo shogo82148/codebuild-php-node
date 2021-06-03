@@ -86,7 +86,7 @@ ENV PATH="/root/.phpenv/shims:/root/.phpenv/bin:$PATH"
 #=======================End of layer: tools  =================
 
 #**************** PYTHON *****************************************************
-ENV PYTHON_38_VERSION="3.8.3" \
+ENV PYTHON_38_VERSION="3.8.10" \
     PYTHON_PIP_VERSION="19.3.1"
 
 COPY tools/runtime_configs/python/$PYTHON_38_VERSION /root/.pyenv/plugins/python-build/share/python-build/$PYTHON_38_VERSION
@@ -144,7 +144,7 @@ RUN     n $NODE_VERSION && npm install --save-dev -g -f grunt && npm install --s
 #****************      END NODEJS     ****************************************************
 
 #****************      PHP     ****************************************************
-ENV PHP_VERSION="8.0.6"
+ENV PHP_VERSION="8.0.7"
 
 RUN curl -L https://raw.githubusercontent.com/phpenv/phpenv-installer/master/bin/phpenv-installer | bash
 ENV PATH="/root/.phpenv/shims:/root/.phpenv/bin:$PATH"

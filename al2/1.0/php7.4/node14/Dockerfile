@@ -99,7 +99,7 @@ COPY dockerd-entrypoint.sh /usr/local/bin/
 
 #**************** PYTHON *****************************************************
 #Python 3.7
-ENV PYTHON_37_VERSION="3.7.6" \
+ENV PYTHON_37_VERSION="3.7.10" \
     PYTHON_PIP_VERSION="19.3.1"
 
 RUN curl https://pyenv.run | bash
