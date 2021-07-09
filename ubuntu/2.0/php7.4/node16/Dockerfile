@@ -111,7 +111,7 @@ VOLUME /var/lib/docker
 
 #****************      NODEJS     ****************************************************
 
-ENV NODE_VERSION="16.3.0" \
+ENV NODE_VERSION="16.4.2" \
     N_SRC_DIR="$SRC_DIR/n"
 
 RUN git clone https://github.com/tj/n $N_SRC_DIR \
@@ -125,7 +125,7 @@ RUN git clone https://github.com/tj/n $N_SRC_DIR \
 #****************      END NODEJS     ****************************************************
 
 #****************      PHP     ****************************************************
-ENV PHP_VERSION="7.4.20"
+ENV PHP_VERSION="7.4.21"
 
 RUN curl -L https://raw.githubusercontent.com/phpenv/phpenv-installer/master/bin/phpenv-installer | bash
 ENV PATH="/root/.phpenv/shims:/root/.phpenv/bin:$PATH"
