@@ -48,28 +48,6 @@ docker pull shogo82148/codebuild-php-node:php7.3-node16-standard-3.0
 docker pull shogo82148/codebuild-php-node:php7.3-node14-standard-3.0
 docker pull shogo82148/codebuild-php-node:php7.3-node12-standard-3.0
 
-# standard 2.0 based
-docker pull shogo82148/codebuild-php-node:php8.0-node16-standard-2.0
-docker pull shogo82148/codebuild-php-node:php8.0-node14-standard-2.0
-docker pull shogo82148/codebuild-php-node:php8.0-node12-standard-2.0
-docker pull shogo82148/codebuild-php-node:php7.4-node16-standard-2.0
-docker pull shogo82148/codebuild-php-node:php7.4-node14-standard-2.0
-docker pull shogo82148/codebuild-php-node:php7.4-node12-standard-2.0
-docker pull shogo82148/codebuild-php-node:php7.3-node16-standard-2.0
-docker pull shogo82148/codebuild-php-node:php7.3-node14-standard-2.0
-docker pull shogo82148/codebuild-php-node:php7.3-node12-standard-2.0
-
-# standard 1.0 based
-docker pull shogo82148/codebuild-php-node:php8.0-node16-standard-1.0
-docker pull shogo82148/codebuild-php-node:php8.0-node14-standard-1.0
-docker pull shogo82148/codebuild-php-node:php8.0-node12-standard-1.0
-docker pull shogo82148/codebuild-php-node:php7.4-node16-standard-1.0
-docker pull shogo82148/codebuild-php-node:php7.4-node14-standard-1.0
-docker pull shogo82148/codebuild-php-node:php7.4-node12-standard-1.0
-docker pull shogo82148/codebuild-php-node:php7.3-node16-standard-1.0
-docker pull shogo82148/codebuild-php-node:php7.3-node14-standard-1.0
-docker pull shogo82148/codebuild-php-node:php7.3-node12-standard-1.0
-
 # amazonlinux2-x86_64-amazonlinux2 3.0 based
 docker pull shogo82148/codebuild-php-node:php8.0-node16-amazonlinux2-3.0
 docker pull shogo82148/codebuild-php-node:php8.0-node14-amazonlinux2-3.0
@@ -91,17 +69,6 @@ docker pull shogo82148/codebuild-php-node:php7.4-node12-amazonlinux2-2.0
 docker pull shogo82148/codebuild-php-node:php7.3-node16-amazonlinux2-2.0
 docker pull shogo82148/codebuild-php-node:php7.3-node14-amazonlinux2-2.0
 docker pull shogo82148/codebuild-php-node:php7.3-node12-amazonlinux2-2.0
-
-# amazonlinux2-x86_64-amazonlinux2 1.0 based
-docker pull shogo82148/codebuild-php-node:php8.0-node16-amazonlinux2-1.0
-docker pull shogo82148/codebuild-php-node:php8.0-node14-amazonlinux2-1.0
-docker pull shogo82148/codebuild-php-node:php8.0-node12-amazonlinux2-1.0
-docker pull shogo82148/codebuild-php-node:php7.4-node16-amazonlinux2-1.0
-docker pull shogo82148/codebuild-php-node:php7.4-node14-amazonlinux2-1.0
-docker pull shogo82148/codebuild-php-node:php7.4-node12-amazonlinux2-1.0
-docker pull shogo82148/codebuild-php-node:php7.3-node16-amazonlinux2-1.0
-docker pull shogo82148/codebuild-php-node:php7.3-node14-amazonlinux2-1.0
-docker pull shogo82148/codebuild-php-node:php7.3-node12-amazonlinux2-1.0
 
 ```
 
