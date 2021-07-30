@@ -10,5 +10,5 @@ runtimes:
     versions:
       16:
         commands:
-          - echo "Installing Node.js version 16.5.0 ..."
-          - n 16.5.0
+          - echo "Installing Node.js version 16.6.0 ..."
+          - n 16.6.0
