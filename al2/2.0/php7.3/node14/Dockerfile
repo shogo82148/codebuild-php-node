@@ -118,7 +118,7 @@ RUN set -ex \
 
 #****************      NODEJS     ****************************************************
 
-ENV NODE_VERSION="14.17.3" \
+ENV NODE_VERSION="14.17.4" \
     N_SRC_DIR="$SRC_DIR/n"
 
 RUN git clone https://github.com/tj/n $N_SRC_DIR \
