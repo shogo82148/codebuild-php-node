@@ -1,3 +1,8 @@
+# ARCHIVED
+
+This repository is no longer maintained.
+Use [AWS CodeBuild curated Docker images](https://github.com/aws/aws-codebuild-docker-images) instead of it.
+
 # codebuild-php-node
 AWS CodeBuild Images for building PHP and Node applications
 
